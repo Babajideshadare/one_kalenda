@@ -1,0 +1,160 @@
+/* Basic reset */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body, html {
+    height: 100%;
+    font-family: Arial, sans-serif;
+}
+
+/* App layout */
+.app-container {
+    display: flex;
+    height: 100vh;
+}
+
+/* Sidebar */
+.sidebar {
+    width: 220px;
+    background-color: #262626;
+    color: #ffffff;
+    display: flex;
+    flex-direction: column;
+    padding: 16px 0;
+}
+
+.sidebar-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 16px 16px 16px;
+}
+
+.logo {
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: 1px;
+}
+
+.sidebar-toggle {
+    background: none;
+    border: none;
+    color: #ffffff;
+    font-size: 18px;
+    cursor: pointer;
+}
+
+.sidebar-nav {
+    margin-top: 16px;
+}
+
+.nav-item {
+    display: block;
+    padding: 12px 20px;
+    color: #cccccc;
+    font-size: 13px;
+    text-decoration: none;
+}
+
+.nav-item:hover {
+    background-color: #333333;
+    color: #ffffff;
+}
+
+.nav-item.active {
+    background-color: #444444;
+    color: #ffffff;
+}
+
+/* Main area */
+.main-area {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Top header bar */
+.topbar {
+    height: 56px;
+    background-color: #4b2f88; /* purple */
+    color: #ffffff;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 24px;
+}
+
+.topbar-left {
+    display: flex;
+    align-items: center;
+}
+
+.topbar-right {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+/* Buttons and links in topbar */
+.primary-btn {
+    background-color: transparent;
+    border: none;
+    color: #ffffff;
+    font-size: 13px;
+    letter-spacing: 0.5px;
+    cursor: pointer;
+}
+
+.icon-btn {
+    background: none;
+    border: none;
+    color: #ffffff;
+    font-size: 18px;
+    cursor: pointer;
+}
+
+.top-link {
+    color: #ffffff;
+    font-size: 13px;
+    text-decoration: none;
+}
+
+.top-link:hover {
+    text-decoration: underline;
+}
+
+/* Main content */
+.content {
+    flex: 1;
+    background-color: #ffffff;
+    position: relative;
+}
+
+/* Empty state in the center */
+.empty-state {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: #333333;
+}
+
+.empty-text {
+    font-size: 16px;
+    margin-bottom: 12px;
+}
+
+.empty-plus {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    border: 2px solid #4b2f88;
+    color: #4b2f88;
+    font-size: 20px;
+    background-color: #ffffff;
+    cursor: pointer;
+}

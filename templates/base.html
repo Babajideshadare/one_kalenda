@@ -1,0 +1,53 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>One Kalenda</title>
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+</head>
+<body>
+<div class="app-container">
+    <!-- Sidebar -->
+    <aside class="sidebar expanded" id="sidebar">
+        <div class="sidebar-header">
+            <div class="logo">LOGO</div>
+            <button class="sidebar-toggle" id="sidebarToggle" type="button">
+                ☰
+            </button>
+        </div>
+        <nav class="sidebar-nav">
+            <a href="#" class="nav-item active">CALENDAR VIEW</a>
+            <a href="#" class="nav-item">REPORT</a>
+            <a href="#" class="nav-item">CUSTOMIZE ICONS</a>
+            <a href="#" class="nav-item">DAILY NOTES ENTRY</a>
+        </nav>
+    </aside>
+
+    <!-- Main area -->
+    <div class="main-area">
+        <!-- Top header -->
+        <header class="topbar">
+            <div class="topbar-left">
+                <button class="primary-btn" type="button">
+                    CREATE CALENDAR ENTRY +
+                </button>
+            </div>
+            <div class="topbar-right">
+                <button class="icon-btn" type="button">🔔</button>
+                <a href="#" class="top-link">SETTINGS</a>
+                <a href="#" class="top-link">PROFILE</a>
+            </div>
+        </header>
+
+        <!-- Page content -->
+        <main class="content">
+            {% block content %}
+            {% endblock %}
+        </main>
+    </div>
+</div>
+
+<script src="{% static 'js/sidebar.js' %}"></script>
+</body>
+</html>
