@@ -5,184 +5,210 @@
     padding: 0;
 }
 
-body, html {
+html, body {
     height: 100%;
-    font-family: Arial, sans-serif;
-    color: #000000; /* main text color: black */
 }
 
-/* App layout */
-.app-container {
+/* Global typography and colors */
+body {
+    font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+    font-size: 16px;           /* exact font size */
+    color: #000000;            /* text color */
+}
+
+/* App root */
+.app-root {
+    min-height: 100vh;
+    background-color: #efefef;  /* background colour: efefef, 100% */
     display: flex;
-    height: 100vh;
+    flex-direction: column;
+}
+
+/* Top nav bar */
+.topbar {
+    height: 64px;
+    background-color: #ffffff;  /* nav bar: ffffff */
+    border-bottom: 0.5px solid rgba(0, 0, 0, 0.15); /* lines: 0.5px, 000000, 15% */
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 32px;
+}
+
+.topbar-left,
+.topbar-center,
+.topbar-right {
+    display: flex;
+    align-items: center;
+}
+
+.topbar-left {
+    gap: 16px;
+}
+
+.topbar-center {
+    flex: 1;
+    justify-content: center;
+}
+
+.topbar-right {
+    gap: 24px;
+}
+
+/* Collapse icon in top bar */
+.sidebar-toggle {
+    background: none;
+    border: none;
+    color: #000000;
+    font-size: 20px;    /* approximate 25x25 visual size */
+    cursor: pointer;
+}
+
+/* Brand text */
+.brand {
+    font-weight: 500;
+}
+
+/* Topbar actions and links */
+.topbar-action {
+    background: none;
+    border: none;
+    color: #000000;
+    font-size: 16px;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.topbar-plus {
+    font-size: 16px;  /* plus icon in top bar */
+}
+
+.topbar-link {
+    background: none;
+    border: none;
+    color: #000000;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+/* Body layout: sidebar + content */
+.app-body {
+    display: flex;
+    flex: 1;
+    min-height: calc(100vh - 64px);
 }
 
 /* Sidebar */
 .sidebar {
-    width: 220px;
-    background-color: #262628; /* exact sidebar color */
-    color: #ffffff;           /* text in sidebar: white */
-    display: flex;
-    flex-direction: column;
-    padding: 16px 0;
+    width: 240px;
+    background-color: #ffffff;  /* side bar: ffffff */
+    border-right: 0.5px solid rgba(0, 0, 0, 0.15); /* line: 0.5px, 000000, 15% */
+    padding-top: 24px;
+    transition: width 0.4s ease-in-out, padding 0.4s ease-in-out, opacity 0.4s ease-in-out;
     overflow: hidden;
-
-    /* smoother animation */
-    transition: width 0.4s ease-in-out, padding 0.4s ease-in-out;
-}
-
-.sidebar-header {
-    display: flex;
-    align-items: center;
-    justify-content: flex-start;
-    padding: 0 16px 16px 16px;
-
-    /* stroke divider under header */
-    border-bottom: 1px solid #555555; /* exact divider color */
-    transition: opacity 0.4s ease-in-out;
-}
-
-.logo {
-    font-size: 14px;
-    font-weight: 600;
-    letter-spacing: 1px;
-    color: #ffffff; /* logo text: white */
 }
 
 .sidebar-nav {
-    margin-top: 16px;
-    transition: opacity 0.4s ease-in-out;
+    display: flex;
+    flex-direction: column;
 }
 
-.nav-item {
-    display: block;
-    padding: 12px 20px;
-    color: #ffffff;               /* sidebar items: white text */
-    font-size: 13px;
+/* Sidebar items */
+.sidebar-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 20px;
     text-decoration: none;
+    color: #000000;           /* texts: 000000 */
+    font-size: 16px;
 }
 
-.nav-item:hover {
-    background-color: #555555;    /* hover: use divider color as hover bg */
-    color: #ffffff;
+/* Active state: blue selector button on sidebar: cbeef3, 47% */
+.sidebar-item.active {
+    background-color: rgba(203, 238, 243, 0.47);
 }
 
-/* Active (Calendar view highlight) */
-/* #43318C at 20% opacity -> rgba(67,49,140,0.2) */
-.nav-item.active {
-    background-color: rgba(67, 49, 140, 0.2); /* highlight with 20% opacity */
-    color: #ffffff;
+/* Sidebar icons */
+.sidebar-icon {
+    width: 15px;              /* 15px by 15px */
+    height: 15px;
+    font-size: 15px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: #000000;
 }
 
-/* Collapsed sidebar: fully hidden (only menu icon in top bar remains) */
+/* Dropdown icon size */
+.sidebar-dropdown {
+    margin-left: auto;
+    font-size: 25px;          /* dropdown icon: 25px by 25px */
+    line-height: 1;
+}
+
+/* Hover effect */
+.sidebar-item:hover {
+    background-color: rgba(0, 0, 0, 0.03);
+}
+
+/* Collapsed sidebar: fully hidden */
 .sidebar.collapsed {
     width: 0;
-    padding: 0;
-}
-
-.sidebar.collapsed .sidebar-header,
-.sidebar.collapsed .sidebar-nav {
+    padding-top: 0;
     opacity: 0;
     pointer-events: none;
 }
 
-/* Main area */
-.main-area {
+/* Main content area */
+.content-wrapper {
     flex: 1;
-    display: flex;
-    flex-direction: column;
-}
-
-/* Top header bar (Nav bar) */
-.topbar {
-    height: 56px;
-    background-color: #43318C; /* exact nav bar color */
-    color: #ffffff;            /* text in topbar: white */
+    background-color: #efefef; /* background matches root */
     display: flex;
     align-items: center;
-    justify-content: space-between;
-    padding: 0 24px;
+    justify-content: center;
 }
 
-.topbar-left {
-    display: flex;
-    align-items: center;
-    gap: 16px;
-}
-
-.topbar-right {
-    display: flex;
-    align-items: center;
-    gap: 16px;
-}
-
-/* Menu icon in top bar */
-.sidebar-toggle {
-    background: none;
-    border: none;
-    color: #ffffff;
-    font-size: 20px;
-    cursor: pointer;
-}
-
-/* Buttons and links in topbar */
-.primary-btn {
-    background-color: transparent;
-    border: none;
-    color: #ffffff;
-    font-size: 13px;
-    letter-spacing: 0.5px;
-    cursor: pointer;
-}
-
-.icon-btn {
-    background: none;
-    border: none;
-    color: #ffffff;
-    font-size: 18px;
-    cursor: pointer;
-}
-
-.top-link {
-    color: #ffffff;
-    font-size: 13px;
-    text-decoration: none;
-}
-
-.top-link:hover {
-    text-decoration: underline;
-}
-
-/* Main content */
-.content {
-    flex: 1;
-    background-color: #ffffff;
-    position: relative;
-    color: #000000; /* content text: black */
-}
-
-/* Empty state in the center */
+/* Empty state */
 .empty-state {
-    height: 100%;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    color: #333333;
+    gap: 8px;
 }
 
+/* Big calendar icon: black, 15%, 63px by 63px */
+.empty-icon {
+    width: 63px;
+    height: 63px;
+    font-size: 40px;  /* visually fill 63x63 area */
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: rgba(0, 0, 0, 0.15);
+}
+
+/* "Add Calendar Entry" text */
 .empty-text {
     font-size: 16px;
-    margin-bottom: 12px;
+    color: #000000;
 }
 
+/* Plus icon: 12px by 12px */
 .empty-plus {
-    width: 36px;
-    height: 36px;
-    border-radius: 50%;
-    border: 2px solid #43318C; /* use main purple for border */
-    color: #43318C;
-    font-size: 20px;
+    width: 24px;             /* button slightly larger than icon */
+    height: 24px;
+    border-radius: 12px;
+    border: 0.5px solid rgba(0, 0, 0, 0.15);
     background-color: #ffffff;
+    color: #000000;
+    font-size: 12px;         /* plus icon 12px */
+    display: flex;
+    align-items: center;
+    justify-content: center;
     cursor: pointer;
 }

@@ -4,45 +4,60 @@
 <head>
     <meta charset="UTF-8">
     <title>One Kalenda</title>
+
+    <!-- Inter font -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+
     <link rel="stylesheet" href="{% static 'css/styles.css' %}">
 </head>
 <body>
-<div class="app-container">
-    <!-- Sidebar -->
-    <aside class="sidebar" id="sidebar">
-        <div class="sidebar-header">
-            <div class="logo">LOGO</div>
+<div class="app-root">
+    <!-- Top nav bar -->
+    <header class="topbar">
+        <div class="topbar-left">
+            <!-- Sidebar collapse/expand icon -->
+            <button class="sidebar-toggle" id="sidebarToggle" type="button">
+                X
+            </button>
+            <div class="brand">Logo</div>
         </div>
-        <nav class="sidebar-nav">
-            <a href="#" class="nav-item active">CALENDAR VIEW</a>
-            <a href="#" class="nav-item">REPORT</a>
-            <a href="#" class="nav-item">CUSTOMIZE ICONS</a>
-            <a href="#" class="nav-item">DAILY NOTES ENTRY</a>
-        </nav>
-    </aside>
 
-    <!-- Main area -->
-    <div class="main-area">
-        <!-- Top header -->
-        <header class="topbar">
-            <div class="topbar-left">
-                <!-- Menu icon in top bar -->
-                <button class="sidebar-toggle" id="sidebarToggle" type="button">
-                    X
-                </button>
-                <button class="primary-btn" type="button">
-                    CREATE CALENDAR ENTRY +
-                </button>
-            </div>
-            <div class="topbar-right">
-                <button class="icon-btn" type="button">🔔</button>
-                <a href="#" class="top-link">SETTINGS</a>
-                <a href="#" class="top-link">PROFILE</a>
-            </div>
-        </header>
+        <div class="topbar-center">
+            <button class="topbar-action" type="button">
+                Create Calendar Entry <span class="topbar-plus">+</span>
+            </button>
+        </div>
 
-        <!-- Page content -->
-        <main class="content">
+        <div class="topbar-right">
+            <button class="topbar-link" type="button">Notifications</button>
+            <button class="topbar-link" type="button">Settings</button>
+            <button class="topbar-link" type="button">Profile</button>
+        </div>
+    </header>
+
+    <!-- Body: sidebar + main content -->
+    <div class="app-body">
+        <!-- Sidebar -->
+        <aside class="sidebar" id="sidebar">
+            <nav class="sidebar-nav">
+                <a href="#" class="sidebar-item active">
+                    <span class="sidebar-icon">📅</span>
+                    <span class="sidebar-label">Calendar View</span>
+                    <span class="sidebar-dropdown">▾</span>
+                </a>
+                <a href="#" class="sidebar-item">
+                    <span class="sidebar-icon">📊</span>
+                    <span class="sidebar-label">Report</span>
+                </a>
+                <a href="#" class="sidebar-item">
+                    <span class="sidebar-icon">📄</span>
+                    <span class="sidebar-label">All Daily Notes</span>
+                </a>
+            </nav>
+        </aside>
+
+        <!-- Main content area -->
+        <main class="content-wrapper">
             {% block content %}
             {% endblock %}
         </main>
