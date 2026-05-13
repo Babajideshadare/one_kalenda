@@ -1,3 +1,47 @@
 from django.db import models
+from django.contrib.auth.models import User
 
-# Create your models here.
+
+class CalendarEntry(models.Model):
+    """
+    One calendar entry / habit.
+    This is what each top tab and sidebar item represents (e.g. 'Daily Exercise').
+    """
+    user = models.ForeignKey(
+        User,
+        null=True,
+        blank=True,
+        on_delete=models.CASCADE,
+        related_name='calendar_entries',
+    )
+    name = models.CharField(max_length=100)
+    order = models.PositiveIntegerField(default=0)  # for tab ordering 0..9
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['order', 'id']
+
+    def __str__(self):
+        return self.name
+
+
+class CalendarDay(models.Model):
+    """
+    One day for a given CalendarEntry (tab) with its notes.
+    There is at most one CalendarDay per (entry, date).
+    """
+    entry = models.ForeignKey(
+        CalendarEntry,
+        on_delete=models.CASCADE,
+        related_name='days',
+    )
+    date = models.DateField()
+    notes = models.TextField(blank=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        unique_together = ('entry', 'date')
+        ordering = ['-date']
+
+    def __str__(self):
+        return f'{self.entry.name} on {self.date}'

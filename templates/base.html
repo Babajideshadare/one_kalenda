@@ -23,9 +23,9 @@
         </div>
 
         <div class="topbar-center">
-            <button class="topbar-action" type="button">
+            <a href="{% url 'create_calendar_entry' %}" class="topbar-action">
                 Create Calendar Entry <span class="topbar-plus">+</span>
-            </button>
+            </a>
         </div>
 
         <div class="topbar-right">
@@ -58,8 +58,29 @@
 
         <!-- Main content area -->
         <main class="content-wrapper">
-            {% block content %}
-            {% endblock %}
+            <!-- Tab row driven by CalendarEntry -->
+            <div class="tab-bar">
+                {% if entries %}
+                    {% for entry in entries %}
+                        <button
+                            class="tab-item {% if entry == active_entry %}active{% endif %}"
+                            type="button"
+                            data-entry-id="{{ entry.id }}"
+                        >
+                            {{ entry.name }}
+                        </button>
+                    {% endfor %}
+                {% else %}
+                    <!-- No entries yet: show no tab names, just placeholder if you want -->
+                {% endif %}
+                <button class="tab-item tab-add" type="button">+</button>
+            </div>
+
+            <!-- Page content -->
+            <div class="page-content">
+                {% block content %}
+                {% endblock %}
+            </div>
         </main>
     </div>
 </div>

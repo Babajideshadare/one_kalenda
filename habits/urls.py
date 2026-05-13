@@ -3,4 +3,5 @@ from . import views
 
 urlpatterns = [
     path('', views.home, name='home'),
+    path('entries/create/', views.create_calendar_entry, name='create_calendar_entry'),
 ]

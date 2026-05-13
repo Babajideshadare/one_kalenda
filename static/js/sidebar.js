@@ -1,4 +1,4 @@
-// Sidebar collapse + active item highlight
+// Sidebar collapse + active item highlight + tab highlight
 document.addEventListener('DOMContentLoaded', function () {
     const sidebar = document.getElementById('sidebar');
     const toggleButton = document.getElementById('sidebarToggle');
@@ -24,20 +24,32 @@ document.addEventListener('DOMContentLoaded', function () {
         updateIcon();
     }
 
-    // --- Active item highlight in sidebar ---
+    // --- Active item highlight in sidebar (top-level items only) ---
     const sidebarItems = document.querySelectorAll('.sidebar-item');
 
     if (sidebarItems.length > 0) {
         sidebarItems.forEach(function (item) {
             item.addEventListener('click', function (event) {
-                // Prevent "#" from jumping to top
-                event.preventDefault();
-
-                // Remove active from all, then add to clicked one
+                event.preventDefault();     // stop "#" jumping
                 sidebarItems.forEach(function (i) {
                     i.classList.remove('active');
                 });
                 item.classList.add('active');
+            });
+        });
+    }
+
+    // --- Active tab highlight (CalendarEntry tabs) ---
+    const tabs = document.querySelectorAll('.tab-item:not(.tab-add)'); // exclude '+' tab
+
+    if (tabs.length > 0) {
+        tabs.forEach(function (tab) {
+            tab.addEventListener('click', function (event) {
+                event.preventDefault();
+                tabs.forEach(function (t) {
+                    t.classList.remove('active');
+                });
+                tab.classList.add('active');
             });
         });
     }

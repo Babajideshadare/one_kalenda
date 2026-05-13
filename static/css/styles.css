@@ -167,11 +167,49 @@ body {
     flex: 1;
     background-color: #efefef; /* background matches root */
     display: flex;
+    flex-direction: column;
+}
+
+/* Tab bar just under topbar */
+.tab-bar {
+    display: flex;
+    align-items: center;
+    padding: 12px 32px 0 32px;
+    gap: 8px;
+    background-color: #efefef;
+}
+
+/* Tabs (CalendarEntry names) */
+.tab-item {
+    padding: 8px 16px;
+    border-radius: 6px 6px 0 0;
+    border: 0.5px solid rgba(0, 0, 0, 0.05); /* 000000, 5%, 0.5px */
+    background-color: #ffffff;
+    font-size: 14px;
+    color: #000000;
+    cursor: pointer;
+}
+
+/* Active tab: 3b5bdb, 15% */
+.tab-item.active {
+    background-color: rgba(59, 91, 219, 0.15); /* Tab 1 selector: 3b5bdb, 15% */
+}
+
+/* '+' tab */
+.tab-item.tab-add {
+    width: 36px;
+    text-align: center;
+}
+
+/* Page content (where home.html goes) */
+.page-content {
+    flex: 1;
+    display: flex;
     align-items: center;
     justify-content: center;
 }
 
-/* Empty state */
+/* Empty state inside page content */
 .empty-state {
     display: flex;
     flex-direction: column;
