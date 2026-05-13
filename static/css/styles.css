@@ -27,7 +27,7 @@ body {
 /* Top nav bar */
 .topbar {
     height: 64px;
-    background-color: #ffffff;  /* nav bar: ffffff */
+    background-color: #ffffff;  /* nav bar: ffffff, 100% */
     border-bottom: 0.5px solid rgba(0, 0, 0, 0.15); /* lines: 0.5px, 000000, 15% */
     display: flex;
     align-items: center;
@@ -79,6 +79,7 @@ body {
     display: inline-flex;
     align-items: center;
     gap: 4px;
+    text-decoration: none;
 }
 
 .topbar-plus {
@@ -103,7 +104,7 @@ body {
 /* Sidebar */
 .sidebar {
     width: 240px;
-    background-color: #ffffff;  /* side bar: ffffff */
+    background-color: #ffffff;  /* side bar: ffffff, 100% */
     border-right: 0.5px solid rgba(0, 0, 0, 0.15); /* line: 0.5px, 000000, 15% */
     padding-top: 24px;
     transition: width 0.4s ease-in-out, padding 0.4s ease-in-out, opacity 0.4s ease-in-out;
@@ -249,4 +250,117 @@ body {
     align-items: center;
     justify-content: center;
     cursor: pointer;
+    text-decoration: none;
+}
+
+/* ============================= */
+/* Calendar + Daily Notes layout */
+/* ============================= */
+
+.calendar-section {
+    width: 100%;
+    max-width: 900px;
+    margin-top: 32px;
+    align-self: center;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+/* Cards share look with popup shadow spec */
+.calendar-card,
+.notes-card {
+    background-color: #ffffff;
+    border-radius: 12px;
+    box-shadow: 4px 4px 15px rgba(0, 0, 0, 0.15); /* x:4, y:4, blur:15, colour:000000, 15% */
+    overflow: hidden;
+}
+
+/* Calendar header (green strip with month + nav) */
+.calendar-header {
+    background-color: #d7ecd8; /* approximate soft green, can tweak to exact */
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 8px 24px;
+    font-size: 14px;
+}
+
+.month-nav {
+    background: none;
+    border: none;
+    font-size: 18px;
+    cursor: pointer;
+}
+
+.month-label {
+    font-weight: 500;
+}
+
+/* Calendar grid */
+.calendar-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 8px;
+    padding: 16px 32px 24px 32px;
+    background-color: #ffffff;
+}
+
+/* Weekday headings */
+.weekday {
+    text-align: center;
+    font-size: 12px;
+    font-weight: 500;
+    color: #555555;
+}
+
+/* Day cells */
+.day {
+    text-align: center;
+    padding: 6px 0;
+    font-size: 14px;
+    cursor: default;
+    border-radius: 50%;
+    width: 32px;
+    height: 32px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Previous/next month days */
+.day.muted {
+    color: #cccccc;
+}
+
+/* Selected day highlight (blue circle) */
+.day.selected {
+    background-color: rgba(59, 91, 219, 0.15);
+    border: 1px solid rgba(59, 91, 219, 0.3);
+}
+
+/* Daily Notes card */
+.notes-header {
+    padding: 10px 24px;
+    border-bottom: 0.5px solid rgba(0, 0, 0, 0.15);
+    font-size: 14px;
+    text-align: center;
+}
+
+.notes-body {
+    padding: 16px 24px 24px 24px;
+    background-color: #f7f9fb;
+}
+
+.notes-textarea {
+    width: 100%;
+    min-height: 120px;
+    border-radius: 8px;
+    border: 0.5px solid rgba(0, 0, 0, 0.05);
+    background-color: #efefef; /* rename box / input bg */
+    padding: 10px 12px;
+    font-family: inherit;
+    font-size: 14px;
+    resize: vertical;
 }

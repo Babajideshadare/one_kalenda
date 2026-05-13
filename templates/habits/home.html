@@ -1,9 +1,88 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<div class="empty-state">
-    <div class="empty-icon">📅</div>
-    <div class="empty-text">Add Calendar Entry</div>
-    <a href="{% url 'create_calendar_entry' %}" class="empty-plus">+</a>
-</div>
+{% if active_entry %}
+    <div class="calendar-section">
+        <!-- Calendar card -->
+        <div class="calendar-card">
+            <div class="calendar-header">
+                <button class="month-nav" type="button">&lt;</button>
+                <div class="month-label">APRIL 2026</div>
+                <button class="month-nav" type="button">&gt;</button>
+            </div>
+
+            <div class="calendar-grid">
+                <!-- Weekday headings -->
+                <div class="weekday">SU</div>
+                <div class="weekday">MO</div>
+                <div class="weekday">TU</div>
+                <div class="weekday">WE</div>
+                <div class="weekday">TH</div>
+                <div class="weekday">FI</div>
+                <div class="weekday">SA</div>
+
+                <!-- Days (static for now, UI only) -->
+                <!-- Row 1 (previous month days) -->
+                <div class="day muted">29</div>
+                <div class="day muted">30</div>
+                <div class="day muted">31</div>
+                <div class="day">1</div>
+                <div class="day">2</div>
+                <div class="day">3</div>
+                <div class="day">4</div>
+
+                <!-- Row 2 -->
+                <div class="day">5</div>
+                <div class="day">6</div>
+                <div class="day">7</div>
+                <div class="day">8</div>
+                <div class="day">9</div>
+                <div class="day">10</div>
+                <div class="day">11</div>
+
+                <!-- Row 3 -->
+                <div class="day">12</div>
+                <div class="day">13</div>
+                <div class="day">14</div>
+                <div class="day">15</div>
+                <div class="day">16</div>
+                <div class="day">17</div>
+                <div class="day">18</div>
+
+                <!-- Row 4 (19 selected) -->
+                <div class="day selected">19</div>
+                <div class="day">20</div>
+                <div class="day">21</div>
+                <div class="day">22</div>
+                <div class="day">23</div>
+                <div class="day">24</div>
+                <div class="day">25</div>
+
+                <!-- Row 5 -->
+                <div class="day">26</div>
+                <div class="day">27</div>
+                <div class="day">28</div>
+                <div class="day">29</div>
+                <div class="day">30</div>
+                <div class="day muted">1</div>
+                <div class="day muted">2</div>
+            </div>
+        </div>
+
+        <!-- Daily Notes card -->
+        <div class="notes-card">
+            <div class="notes-header">Daily Notes</div>
+            <div class="notes-body">
+                <textarea class="notes-textarea" placeholder="Enter notes for this calendar entry"></textarea>
+            </div>
+        </div>
+    </div>
+{% else %}
+    <!-- No active entry: show empty state -->
+    <div class="empty-state">
+        <div class="empty-icon">📅</div>
+        <div class="empty-text">Add Calendar Entry</div>
+        <a href="{% url 'create_calendar_entry' %}" class="empty-plus">+</a>
+    </div>
+{% endif %}
 {% endblock %}
