@@ -3,7 +3,7 @@
 {% block content %}
 {% if active_entry %}
     <div class="calendar-section">
-        <!-- Calendar card -->
+        <!-- Calendar card (still static UI for now) -->
         <div class="calendar-card">
             <div class="calendar-header">
                 <button class="month-nav" type="button">&lt;</button>
@@ -22,7 +22,6 @@
                 <div class="weekday">SA</div>
 
                 <!-- Days (static for now, UI only) -->
-                <!-- Row 1 (previous month days) -->
                 <div class="day muted">29</div>
                 <div class="day muted">30</div>
                 <div class="day muted">31</div>
@@ -31,7 +30,6 @@
                 <div class="day">3</div>
                 <div class="day">4</div>
 
-                <!-- Row 2 -->
                 <div class="day">5</div>
                 <div class="day">6</div>
                 <div class="day">7</div>
@@ -40,7 +38,6 @@
                 <div class="day">10</div>
                 <div class="day">11</div>
 
-                <!-- Row 3 -->
                 <div class="day">12</div>
                 <div class="day">13</div>
                 <div class="day">14</div>
@@ -49,7 +46,6 @@
                 <div class="day">17</div>
                 <div class="day">18</div>
 
-                <!-- Row 4 (19 selected) -->
                 <div class="day selected">19</div>
                 <div class="day">20</div>
                 <div class="day">21</div>
@@ -58,7 +54,6 @@
                 <div class="day">24</div>
                 <div class="day">25</div>
 
-                <!-- Row 5 -->
                 <div class="day">26</div>
                 <div class="day">27</div>
                 <div class="day">28</div>
@@ -71,9 +66,31 @@
 
         <!-- Daily Notes card -->
         <div class="notes-card">
-            <div class="notes-header">Daily Notes</div>
+            <div class="notes-header">
+                Daily Notes
+                {% if selected_date %}
+                    <span class="notes-date-label">
+                        (for {{ selected_date }})
+                    </span>
+                {% endif %}
+            </div>
             <div class="notes-body">
-                <textarea class="notes-textarea" placeholder="Enter notes for this calendar entry"></textarea>
+                <form method="post" class="notes-form">
+                    {% csrf_token %}
+                    <textarea
+                        class="notes-textarea"
+                        name="notes"
+                        placeholder="Enter notes for this calendar entry"
+                    >{% if day %}{{ day.notes }}{% endif %}</textarea>
+
+                    <input type="hidden" name="entry_id" value="{{ active_entry.id }}">
+
+                    <div class="notes-actions">
+                        <button type="submit" class="notes-save-btn">
+                            Save
+                        </button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
