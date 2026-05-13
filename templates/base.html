@@ -60,7 +60,7 @@
                             {{ entry.name }}
                         </a>
                     {% empty %}
-                        <!-- no entries yet: nothing here -->
+                        <!-- no entries yet -->
                     {% endfor %}
                 </div>
 
@@ -78,20 +78,14 @@
 
         <!-- Main content area -->
         <main class="content-wrapper">
-            <!-- Tab row driven by CalendarEntry -->
-            <div class="tab-bar">
-                {% for entry in entries %}
-                    <a
-                        href="/?entry_id={{ entry.id }}"
-                        class="tab-item {% if entry == active_entry %}active{% endif %}"
-                        data-entry-id="{{ entry.id }}"
-                    >
-                        {{ entry.name }}
-                    </a>
-                {% empty %}
-                    <!-- no named tabs when there are no entries -->
-                {% endfor %}
-                <a href="{% url 'create_calendar_entry' %}" class="tab-item tab-add">+</a>
+            <!-- Small bar showing only active entry name + + -->
+            <div class="entry-bar">
+                {% if active_entry %}
+                    <div class="entry-bar-name">
+                        {{ active_entry.name }}
+                    </div>
+                    <a href="{% url 'create_calendar_entry' %}" class="entry-bar-add">+</a>
+                {% endif %}
             </div>
 
             <!-- Page content -->

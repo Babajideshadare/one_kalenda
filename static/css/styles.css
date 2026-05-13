@@ -201,8 +201,8 @@ body {
     flex-direction: column;
 }
 
-/* Tab bar just under topbar */
-.tab-bar {
+/* Small bar above calendar: active entry name + + */
+.entry-bar {
     display: flex;
     align-items: center;
     padding: 12px 32px 0 32px;
@@ -210,27 +210,27 @@ body {
     background-color: #efefef;
 }
 
-/* Tabs (CalendarEntry names) */
-.tab-item {
+.entry-bar-name {
     padding: 8px 16px;
-    border-radius: 6px 6px 0 0;
+    border-radius: 6px;
     border: 0.5px solid rgba(0, 0, 0, 0.05); /* 000000, 5%, 0.5px */
-    background-color: #ffffff;
+    background-color: rgba(59, 91, 219, 0.15); /* 3b5bdb, 15% */
     font-size: 14px;
     color: #000000;
-    cursor: pointer;
-    text-decoration: none;
 }
 
-/* Active tab: 3b5bdb, 15% */
-.tab-item.active {
-    background-color: rgba(59, 91, 219, 0.15); /* Tab 1 selector: 3b5bdb, 15% */
-}
-
-/* '+' tab */
-.tab-item.tab-add {
-    width: 36px;
+.entry-bar-add {
+    width: 32px;
+    height: 32px;
+    border-radius: 6px;
+    border: 0.5px solid rgba(0, 0, 0, 0.05);
+    background-color: #ffffff;
+    color: #000000;
+    font-size: 18px;
     text-align: center;
+    text-decoration: none;
+    line-height: 30px;
+    cursor: pointer;
 }
 
 /* Page content (where home.html goes) */
@@ -396,7 +396,7 @@ body {
     resize: vertical;
 }
 
-/* Notes date label (small text next to 'Daily Notes') */
+/* Notes date label */
 .notes-date-label {
     font-size: 12px;
     color: #888888;
@@ -419,7 +419,7 @@ body {
     padding: 6px 16px;
     border-radius: 8px;
     border: none;
-    background-color: #4fc192; /* matches yes button color */
+    background-color: #4fc192; /* Yes button color */
     color: #ffffff;
     font-size: 14px;
     cursor: pointer;
