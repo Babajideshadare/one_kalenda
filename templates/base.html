@@ -91,7 +91,7 @@
                 {% empty %}
                     <!-- no named tabs when there are no entries -->
                 {% endfor %}
-                <button class="tab-item tab-add" type="button">+</button>
+                <a href="{% url 'create_calendar_entry' %}" class="tab-item tab-add">+</a>
             </div>
 
             <!-- Page content -->
