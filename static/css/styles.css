@@ -116,20 +116,20 @@ body {
     flex-direction: column;
 }
 
-/* Sidebar items */
+/* Sidebar general item */
 .sidebar-item {
     display: flex;
     align-items: center;
     gap: 12px;
     padding: 10px 20px;
     text-decoration: none;
-    color: #000000;           /* texts: 000000 */
+    color: #000000;
     font-size: 16px;
 }
 
-/* Active state: blue selector button on sidebar: cbeef3, 47% */
-.sidebar-item.active {
-    background-color: rgba(203, 238, 243, 0.47);
+/* Calendar View header item */
+.sidebar-calendar-header {
+    padding-right: 12px;
 }
 
 /* Sidebar icons */
@@ -143,14 +143,44 @@ body {
     color: #000000;
 }
 
-/* Dropdown icon size */
-.sidebar-dropdown {
+/* Dropdown toggle button */
+.sidebar-entries-toggle {
     margin-left: auto;
-    font-size: 25px;          /* dropdown icon: 25px by 25px */
+    background: none;
+    border: none;
+    font-size: 20px;          /* dropdown icon: 25px visually */
     line-height: 1;
+    cursor: pointer;
 }
 
-/* Hover effect */
+/* Nested CalendarEntry list under Calendar View */
+.sidebar-entries {
+    display: flex;
+    flex-direction: column;
+    margin-left: 40px;        /* indent nested entries */
+    margin-bottom: 8px;
+}
+
+/* Individual nested entry */
+.sidebar-entry {
+    padding: 6px 12px;
+    border-radius: 6px;
+    text-decoration: none;
+    color: #000000;
+    font-size: 14px;
+}
+
+/* Active nested entry highlight: cbeef3, 47% */
+.sidebar-entry.active {
+    background-color: rgba(203, 238, 243, 0.47);
+}
+
+/* Collapsed state for nested entries */
+.sidebar-entries.collapsed {
+    display: none;
+}
+
+/* Hover effect for top-level items */
 .sidebar-item:hover {
     background-color: rgba(0, 0, 0, 0.03);
 }
@@ -189,6 +219,7 @@ body {
     font-size: 14px;
     color: #000000;
     cursor: pointer;
+    text-decoration: none;
 }
 
 /* Active tab: 3b5bdb, 15% */
@@ -272,13 +303,13 @@ body {
 .notes-card {
     background-color: #ffffff;
     border-radius: 12px;
-    box-shadow: 4px 4px 15px rgba(0, 0, 0, 0.15); /* x:4, y:4, blur:15, colour:000000, 15% */
+    box-shadow: 4px 4px 15px rgba(0, 0, 0, 0.15); /* x:4, y:4, blur:15 */
     overflow: hidden;
 }
 
 /* Calendar header (green strip with month + nav) */
 .calendar-header {
-    background-color: #d7ecd8; /* approximate soft green, can tweak to exact */
+    background-color: #d7ecd8; /* approximate soft green */
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -358,7 +389,7 @@ body {
     min-height: 120px;
     border-radius: 8px;
     border: 0.5px solid rgba(0, 0, 0, 0.05);
-    background-color: #efefef; /* rename box / input bg */
+    background-color: #efefef;
     padding: 10px 12px;
     font-family: inherit;
     font-size: 14px;

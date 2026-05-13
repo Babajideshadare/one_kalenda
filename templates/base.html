@@ -40,11 +40,31 @@
         <!-- Sidebar -->
         <aside class="sidebar" id="sidebar">
             <nav class="sidebar-nav">
-                <a href="#" class="sidebar-item active">
+
+                <!-- Calendar View header with dropdown -->
+                <div class="sidebar-item sidebar-calendar-header">
                     <span class="sidebar-icon">📅</span>
                     <span class="sidebar-label">Calendar View</span>
-                    <span class="sidebar-dropdown">▾</span>
-                </a>
+                    <button class="sidebar-entries-toggle" id="calendarEntriesToggle" type="button">
+                        ▾
+                    </button>
+                </div>
+
+                <!-- Nested list of CalendarEntry items -->
+                <div class="sidebar-entries" id="calendarEntriesList">
+                    {% for entry in entries %}
+                        <a
+                            href="/?entry_id={{ entry.id }}"
+                            class="sidebar-entry {% if entry == active_entry %}active{% endif %}"
+                        >
+                            {{ entry.name }}
+                        </a>
+                    {% empty %}
+                        <!-- no entries yet: nothing here -->
+                    {% endfor %}
+                </div>
+
+                <!-- Other sections -->
                 <a href="#" class="sidebar-item">
                     <span class="sidebar-icon">📊</span>
                     <span class="sidebar-label">Report</span>
@@ -60,19 +80,17 @@
         <main class="content-wrapper">
             <!-- Tab row driven by CalendarEntry -->
             <div class="tab-bar">
-                {% if entries %}
-                    {% for entry in entries %}
-                        <button
-                            class="tab-item {% if entry == active_entry %}active{% endif %}"
-                            type="button"
-                            data-entry-id="{{ entry.id }}"
-                        >
-                            {{ entry.name }}
-                        </button>
-                    {% endfor %}
-                {% else %}
-                    <!-- No entries yet: show no tab names, just placeholder if you want -->
-                {% endif %}
+                {% for entry in entries %}
+                    <a
+                        href="/?entry_id={{ entry.id }}"
+                        class="tab-item {% if entry == active_entry %}active{% endif %}"
+                        data-entry-id="{{ entry.id }}"
+                    >
+                        {{ entry.name }}
+                    </a>
+                {% empty %}
+                    <!-- no named tabs when there are no entries -->
+                {% endfor %}
                 <button class="tab-item tab-add" type="button">+</button>
             </div>
 
