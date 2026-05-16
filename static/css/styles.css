@@ -400,23 +400,23 @@ body {
 
 /* Today subtle highlight */
 .day.today {
-    border: 1px solid rgba(0, 0, 0, 0.15);
-    background-color: rgba(0, 0, 0, 0.03);
+    border: 1px solid rgba(59, 91, 219, 0.3);
+    background-color: rgba(59, 91, 219, 0.15);
 }
 
 /* Selected day */
 .day.selected {
-    background-color: rgba(59, 91, 219, 0.15);
-    border: 1px solid rgba(59, 91, 219, 0.3);
+    background-color: rgba(0, 0, 0, 0.03);
+    border: 1px solid rgba(0, 0, 0, 0.15);
 }
 
 /* Status styles (subtle rings) */
 .day-done {
-    box-shadow: 0 0 0 1px rgba(79, 193, 146, 0.5);   /* softer green */
+    box-shadow: 0 0 0 3px #4fc192;   
 }
 
 .day-cancel {
-    box-shadow: 0 0 0 1px rgba(255, 107, 107, 0.3);
+    box-shadow: 0 0 0 3px #ff8888;
 }
 
 /* Notes card */
