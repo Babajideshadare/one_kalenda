@@ -18,9 +18,9 @@
                 <div class="profile-display-name">
                     {{ request.user.first_name|default:request.user.username }}
                 </div>
-                <div class="profile-edit-image-text">
+                <a href="{% url 'edit_profile' %}" class="profile-edit-image-text-link">
                     Edit Profile Image
-                </div>
+                </a>
             </div>
         </div>
 

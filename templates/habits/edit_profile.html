@@ -10,7 +10,7 @@
             </button>
         </div>
 
-        <form method="post" id="edit-profile-form" class="profile-form">
+        <form method="post" id="edit-profile-form" class="profile-form" enctype="multipart/form-data">
             {% csrf_token %}
 
             {% if form.non_field_errors %}
@@ -46,6 +46,25 @@
                 >
                 {% if form.username.errors %}
                     <div class="field-error">{{ form.username.errors.0 }}</div>
+                {% endif %}
+            </div>
+
+            <div class="profile-field-group">
+                <label for="{{ form.avatar.id_for_label }}">Profile Image</label>
+                <input
+                    type="file"
+                    name="{{ form.avatar.name }}"
+                    id="{{ form.avatar.id_for_label }}"
+                    class="profile-input"
+                    accept="image/*"
+                >
+                {% if avatar_url %}
+                    <div class="profile-avatar-preview-wrapper">
+                        <img src="{{ avatar_url }}" alt="Current profile image" class="profile-avatar-preview">
+                    </div>
+                {% endif %}
+                {% if form.avatar.errors %}
+                    <div class="field-error">{{ form.avatar.errors.0 }}</div>
                 {% endif %}
             </div>
 
