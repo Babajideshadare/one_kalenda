@@ -114,6 +114,10 @@ body {
     padding-top: 24px;
     transition: width 0.4s ease-in-out, padding 0.4s ease-in-out, opacity 0.4s ease-in-out;
     overflow: hidden;
+
+    /* NEW: make sidebar a vertical flex container so footer can sit at bottom */
+    display: flex;
+    flex-direction: column;
 }
 
 .sidebar-nav {
@@ -121,9 +125,13 @@ body {
     flex-direction: column;
 }
 
+/* Sidebar footer with Logout fixed at bottom */
 .sidebar-footer {
     padding: 12px 20px;
     border-top: 0.5px solid rgba(0, 0, 0, 0.15);
+
+    /* NEW: push footer to bottom of the flex column */
+    margin-top: auto;
 }
 
 .sidebar-footer-link {
