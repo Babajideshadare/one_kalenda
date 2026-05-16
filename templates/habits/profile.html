@@ -1,0 +1,75 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="profile-container">
+    <div class="profile-card">
+        <!-- Header: avatar + name + "Edit Profile Image" -->
+        <div class="profile-header-row">
+            <div class="profile-avatar-circle"></div>
+            <div class="profile-header-text">
+                <div class="profile-display-name">
+                    {{ form.name.value|default_if_none:form.fields.name.initial }}
+                </div>
+                <div class="profile-edit-image-text">
+                    Edit Profile Image
+                </div>
+            </div>
+        </div>
+
+        <!-- Form -->
+        <form method="post" class="profile-form">
+            {% csrf_token %}
+
+            <!-- Name -->
+            <div class="profile-field-group">
+                <label for="{{ form.name.id_for_label }}">Name</label>
+                <input
+                    type="text"
+                    name="{{ form.name.name }}"
+                    id="{{ form.name.id_for_label }}"
+                    value="{{ form.name.value|default_if_none:form.fields.name.initial }}"
+                    class="profile-input"
+                >
+                {% if form.name.errors %}
+                    <div class="field-error">{{ form.name.errors.0 }}</div>
+                {% endif %}
+            </div>
+
+            <!-- Username -->
+            <div class="profile-field-group">
+                <label for="{{ form.username.id_for_label }}">Username</label>
+                <input
+                    type="text"
+                    name="{{ form.username.name }}"
+                    id="{{ form.username.id_for_label }}"
+                    value="{{ form.username.value|default_if_none:form.fields.username.initial }}"
+                    placeholder="No Username"
+                    class="profile-input"
+                >
+                {% if form.username.errors %}
+                    <div class="field-error">{{ form.username.errors.0 }}</div>
+                {% endif %}
+            </div>
+
+            <!-- Email -->
+            <div class="profile-field-group">
+                <label for="{{ form.email.id_for_label }}">Email</label>
+                <input
+                    type="email"
+                    name="{{ form.email.name }}"
+                    id="{{ form.email.id_for_label }}"
+                    value="{{ form.email.value|default_if_none:form.fields.email.initial }}"
+                    class="profile-input"
+                >
+                {% if form.email.errors %}
+                    <div class="field-error">{{ form.email.errors.0 }}</div>
+                {% endif %}
+            </div>
+
+            <button type="submit" class="profile-primary-btn">
+                Edit Profile
+            </button>
+        </form>
+    </div>
+</div>
+{% endblock %}

@@ -6,7 +6,7 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect, get_object_or_404
 
 from .models import CalendarEntry, CalendarDay
-from .forms import RegisterForm
+from .forms import RegisterForm, ProfileForm
 
 
 @login_required
@@ -232,7 +232,14 @@ def register(request):
 @login_required
 def profile(request):
     """
-    Simple profile page showing user's name and email,
-    with a logout button.
+    Profile page: edit name, username (display handle), and email.
     """
-    return render(request, 'habits/profile.html')
+    if request.method == 'POST':
+        form = ProfileForm(request.POST, user=request.user)
+        if form.is_valid():
+            form.save()
+            return redirect('profile')
+    else:
+        form = ProfileForm(user=request.user)
+
+    return render(request, 'habits/profile.html', {'form': form})

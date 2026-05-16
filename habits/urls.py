@@ -11,6 +11,9 @@ urlpatterns = [
     path('logout/', auth_views.LogoutView.as_view(), name='logout'),
     path('register/', views.register, name='register'),
 
+    # Profile
+    path('profile/', views.profile, name='profile'),
+
     # Calendar entries
     path('entries/create/', views.create_calendar_entry, name='create_calendar_entry'),
     path('entries/<int:pk>/rename/', views.rename_calendar_entry, name='rename_calendar_entry'),

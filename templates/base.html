@@ -31,7 +31,7 @@
         <div class="topbar-right">
             <button class="topbar-link" type="button">Notifications</button>
             <button class="topbar-link" type="button">Settings</button>
-            <button class="topbar-link" type="button">Profile</button>
+            <a href="{% url 'profile' %}" class="topbar-link">Profile</a>
         </div>
     </header>
 
@@ -75,11 +75,16 @@
                     <span class="sidebar-label">All Daily Notes</span>
                 </a>
             </nav>
+
+            <!-- Sidebar footer with Logout -->
+            <div class="sidebar-footer">
+                <a href="{% url 'logout' %}" class="sidebar-footer-link">Logout</a>
+            </div>
         </aside>
 
         <!-- Main content area -->
         <main class="content-wrapper">
-            <!-- Horizontal tab bar for CalendarEntry -->
+            <!-- Horizontal tab bar -->
             <div class="tab-bar">
                 {% for entry in entries %}
                     <a
@@ -90,9 +95,8 @@
                         {{ entry.name }}
                     </a>
                 {% empty %}
-                    <!-- no named tabs when there are no entries -->
+                    <!-- no tabs when there are no entries -->
                 {% endfor %}
-                <!-- '+' tab to create new entry -->
                 <a href="{% url 'create_calendar_entry' %}" class="tab-item tab-add">+</a>
             </div>
 
