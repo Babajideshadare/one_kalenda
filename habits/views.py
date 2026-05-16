@@ -26,15 +26,18 @@ def home(request):
         except CalendarEntry.DoesNotExist:
             pass
 
+    # Today's real date (for subtle highlight)
+    today = date.today()
+
     # Determine selected date from GET or POST; default to today
-    selected_date = date.today()
+    selected_date = today
     date_str = request.GET.get('date') or request.POST.get('date')
     if date_str:
         try:
             selected_date = datetime.strptime(date_str, '%Y-%m-%d').date()
         except ValueError:
             # ignore invalid dates and stick with today
-            pass
+            selected_date = today
 
     # Compute calendar for the month of selected_date
     display_year = selected_date.year
@@ -68,6 +71,7 @@ def home(request):
         'entries': entries,
         'active_entry': active_entry,
         'selected_date': selected_date,
+        'today': today,
         'day': day,
         'display_year': display_year,
         'display_month': display_month,

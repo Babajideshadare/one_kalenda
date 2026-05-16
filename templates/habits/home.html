@@ -38,6 +38,13 @@
                             >
                                 {{ day_date.day }}
                             </a>
+                        {% elif day_date == today %}
+                            <a
+                                href="{% url 'home' %}?entry_id={{ active_entry.id }}&date={{ day_date|date:'Y-m-d' }}"
+                                class="day today"
+                            >
+                                {{ day_date.day }}
+                            </a>
                         {% else %}
                             <a
                                 href="{% url 'home' %}?entry_id={{ active_entry.id }}&date={{ day_date|date:'Y-m-d' }}"
