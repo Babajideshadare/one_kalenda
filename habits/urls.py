@@ -13,6 +13,7 @@ urlpatterns = [
 
     # Profile
     path('profile/', views.profile, name='profile'),
+    path('profile/edit/', views.edit_profile, name='edit_profile'),
 
     # Calendar entries
     path('entries/create/', views.create_calendar_entry, name='create_calendar_entry'),

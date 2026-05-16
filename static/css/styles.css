@@ -721,3 +721,48 @@ body {
     font-size: 12px;
     color: #d9534f;
 }
+
+/* Read-only value box on profile page */
+.profile-field-value {
+    min-height: 40px;
+    padding: 8px 12px;
+    border-radius: 4px;
+    border: 1px solid #e0e0e0;
+    background-color: #ffffff;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+}
+
+/* Make "Edit Profile" link look like the blue button */
+.profile-edit-link {
+    display: inline-block;
+    text-decoration: none;
+    text-align: center;
+}
+
+/* Edit Profile header row (title + Save button) */
+.profile-edit-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 32px;
+}
+
+.profile-edit-header h2 {
+    font-size: 24px;
+    font-weight: 600;
+    color: #000000;
+}
+
+.profile-save-btn {
+    margin-top: 0;
+}
+
+/* "Change Password" label */
+.profile-section-label {
+    font-size: 14px;
+    font-weight: 600;
+    color: #000000;
+    margin: 8px 0 8px 0;
+}

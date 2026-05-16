@@ -1,12 +1,12 @@
 import calendar
 from datetime import date, datetime
 
-from django.contrib.auth import login
+from django.contrib.auth import login, update_session_auth_hash
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect, get_object_or_404
 
 from .models import CalendarEntry, CalendarDay
-from .forms import RegisterForm, ProfileForm
+from .forms import RegisterForm, EditProfileForm
 
 
 @login_required
@@ -232,14 +232,25 @@ def register(request):
 @login_required
 def profile(request):
     """
-    Profile page: edit name, username (display handle), and email.
+    Read-only profile page showing basic user info + Edit Profile button.
+    """
+    return render(request, 'habits/profile.html')
+
+
+@login_required
+def edit_profile(request):
+    """
+    Edit profile details (full name, username) and optionally change password.
     """
     if request.method == 'POST':
-        form = ProfileForm(request.POST, user=request.user)
+        form = EditProfileForm(request.POST, user=request.user)
         if form.is_valid():
-            form.save()
+            user = form.save()
+            # If password was changed, keep the user logged in
+            if form.cleaned_data.get('new_password1'):
+                update_session_auth_hash(request, user)
             return redirect('profile')
     else:
-        form = ProfileForm(user=request.user)
+        form = EditProfileForm(user=request.user)
 
-    return render(request, 'habits/profile.html', {'form': form})
+    return render(request, 'habits/edit_profile.html', {'form': form})

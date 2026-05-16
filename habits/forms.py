@@ -36,7 +36,7 @@ class RegisterForm(forms.Form):
         email = self.cleaned_data['email'].lower()
         password = self.cleaned_data['password1']
 
-        user = User.create_user(
+        user = User.objects.create_user(
             username=email,   # use email as username
             email=email,
             password=password,
@@ -46,46 +46,59 @@ class RegisterForm(forms.Form):
         return user
 
 
-class ProfileForm(forms.Form):
+class EditProfileForm(forms.Form):
     """
-    Edit profile:
-    - Name      -> user.first_name
-    - Username  -> user.last_name (display handle only)
-    - Email     -> user.email AND user.username (login identifier)
+    Edit profile details and optionally change password.
+    - full_name -> user.first_name
+    - username  -> user.last_name (display handle)
+    - new_password1/new_password2 -> user.set_password if provided
     """
-    name = forms.CharField(max_length=150, required=False, label='Name')
+    full_name = forms.CharField(max_length=150, required=True, label='Full Name')
     username = forms.CharField(max_length=150, required=False, label='Username')
-    email = forms.EmailField(required=True, label='Email')
+    new_password1 = forms.CharField(
+        label='New Password',
+        required=False,
+        widget=forms.PasswordInput,
+    )
+    new_password2 = forms.CharField(
+        label='Confirm Password',
+        required=False,
+        widget=forms.PasswordInput,
+    )
 
     def __init__(self, *args, **kwargs):
         self.user = kwargs.pop('user')
         super().__init__(*args, **kwargs)
 
-        self.fields['name'].initial = self.user.first_name or ''
+        self.fields['full_name'].initial = self.user.first_name or ''
         self.fields['username'].initial = self.user.last_name or ''
-        self.fields['email'].initial = self.user.email or ''
 
-        # Match UI placeholder
-        self.fields['username'].widget.attrs['placeholder'] = 'No Username'
+    def clean(self):
+        cleaned = super().clean()
+        p1 = cleaned.get('new_password1')
+        p2 = cleaned.get('new_password2')
 
-    def clean_email(self):
-        email = (self.cleaned_data.get('email') or '').lower()
-        if not email:
-            raise forms.ValidationError("Email is required.")
+        if p1 or p2:
+            # If one is filled, both must be and they must match
+            if not p1 or not p2:
+                raise forms.ValidationError("Please enter the new password twice.")
+            if p1 != p2:
+                raise forms.ValidationError("New password and confirmation do not match.")
+            if len(p1) < 8:
+                raise forms.ValidationError("Password must be at least 8 characters long.")
 
-        # Email is also used as username for login, so must be unique
-        if User.objects.filter(username=email).exclude(pk=self.user.pk).exists():
-            raise forms.ValidationError("An account with this email already exists.")
-        return email
+        return cleaned
 
     def save(self):
-        name = (self.cleaned_data.get('name') or '').strip()
+        full_name = (self.cleaned_data.get('full_name') or '').strip()
         username = (self.cleaned_data.get('username') or '').strip()
-        email = self.cleaned_data['email'].lower()
+        new_password = self.cleaned_data.get('new_password1')
 
-        self.user.first_name = name
+        self.user.first_name = full_name
         self.user.last_name = username
-        self.user.email = email
-        self.user.username = email  # keep login identifier in sync
+
+        if new_password:
+            self.user.set_password(new_password)
+
         self.user.save()
         return self.user
