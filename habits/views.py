@@ -1,3 +1,4 @@
+import calendar
 from datetime import date
 
 from django.shortcuts import render, redirect, get_object_or_404
@@ -6,8 +7,9 @@ from .models import CalendarEntry, CalendarDay
 
 def home(request):
     """
-    Home page: show layout, entries in sidebar, and for an active entry
-    show a calendar + Daily Notes for a single date (today for now).
+    Home page: show layout, entries in sidebar and as tabs, and for an active entry
+    show a real calendar for the current month + Daily Notes for a single date
+    (selected_date, which is today for now).
 
     POST from notes form: save notes for the active entry + selected date.
     GET: display current notes.
@@ -27,8 +29,16 @@ def home(request):
     selected_date = date.today()
     day = None
 
+    # Compute calendar for the month of selected_date
+    display_year = selected_date.year
+    display_month = selected_date.month
+    cal = calendar.Calendar(firstweekday=6)  # 6 = Sunday
+    # weeks is a list of weeks; each week is a list of 7 date objects (including prev/next month days)
+    weeks = cal.monthdatescalendar(display_year, display_month)
+    month_label = selected_date.strftime('%B %Y').upper()
+
     if active_entry:
-        # Handle saving notes (POST) from the notes form
+        # Handle saving notes (POST) from the notes form only
         if request.method == 'POST' and 'notes' in request.POST:
             notes = request.POST.get('notes', '')
             day, _created = CalendarDay.objects.get_or_create(
@@ -51,6 +61,10 @@ def home(request):
         'active_entry': active_entry,
         'selected_date': selected_date,
         'day': day,
+        'display_year': display_year,
+        'display_month': display_month,
+        'weeks': weeks,
+        'month_label': month_label,
     }
     return render(request, 'habits/home.html', context)
 
