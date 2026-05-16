@@ -599,3 +599,9 @@ body {
 .auth-text a:hover {
     text-decoration: underline;
 }
+
+.auth-error {
+    margin-bottom: 8px;
+    font-size: 13px;
+    color: #d9534f;      /* soft red, not too bold */
+}
