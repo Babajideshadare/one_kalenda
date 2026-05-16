@@ -6,7 +6,7 @@ from django.contrib.auth import logout as auth_logout
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect, get_object_or_404
 
-from .models import CalendarEntry, CalendarDay
+from .models import CalendarEntry, CalendarDay, UserProfile
 from .forms import RegisterForm, EditProfileForm
 
 
@@ -241,18 +241,34 @@ def logout_view(request):
 @login_required
 def profile(request):
     """
-    Read-only profile page showing basic user info + Edit Profile button.
+    Read-only profile page showing basic user info + avatar + Edit Profile button.
     """
-    return render(request, 'habits/profile.html')
+    avatar_url = None
+    try:
+        profile_obj = request.user.profile
+        if profile_obj.avatar:
+            avatar_url = profile_obj.avatar.url
+    except UserProfile.DoesNotExist:
+        pass
+
+    return render(request, 'habits/profile.html', {'avatar_url': avatar_url})
 
 
 @login_required
 def edit_profile(request):
     """
-    Edit profile details (full name, username) and optionally change password.
+    Edit profile details (full name, username), change password, and upload avatar.
     """
+    avatar_url = None
+    try:
+        profile_obj = request.user.profile
+        if profile_obj.avatar:
+            avatar_url = profile_obj.avatar.url
+    except UserProfile.DoesNotExist:
+        pass
+
     if request.method == 'POST':
-        form = EditProfileForm(request.POST, user=request.user)
+        form = EditProfileForm(request.POST, request.FILES, user=request.user)
         if form.is_valid():
             user = form.save()
             # If password was changed, keep the user logged in
@@ -262,4 +278,7 @@ def edit_profile(request):
     else:
         form = EditProfileForm(user=request.user)
 
-    return render(request, 'habits/edit_profile.html', {'form': form})
+    return render(request, 'habits/edit_profile.html', {
+        'form': form,
+        'avatar_url': avatar_url,
+    })

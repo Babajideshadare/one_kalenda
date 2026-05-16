@@ -1,6 +1,8 @@
 from django import forms
 from django.contrib.auth.models import User
 
+from .models import UserProfile
+
 
 class RegisterForm(forms.Form):
     full_name = forms.CharField(max_length=150, required=True)
@@ -48,13 +50,15 @@ class RegisterForm(forms.Form):
 
 class EditProfileForm(forms.Form):
     """
-    Edit profile details and optionally change password.
+    Edit profile details and optionally change password + avatar.
     - full_name -> user.first_name
     - username  -> user.last_name (display handle)
+    - avatar    -> UserProfile.avatar
     - new_password1/new_password2 -> user.set_password if provided
     """
     full_name = forms.CharField(max_length=150, required=True, label='Full Name')
     username = forms.CharField(max_length=150, required=False, label='Username')
+    avatar = forms.ImageField(required=False, label='Profile Image')
     new_password1 = forms.CharField(
         label='New Password',
         required=False,
@@ -72,6 +76,8 @@ class EditProfileForm(forms.Form):
 
         self.fields['full_name'].initial = self.user.first_name or ''
         self.fields['username'].initial = self.user.last_name or ''
+        # file field doesn't need initial for our purposes
+        self.fields['avatar'].widget.attrs['accept'] = 'image/*'
 
     def clean(self):
         cleaned = super().clean()
@@ -93,7 +99,9 @@ class EditProfileForm(forms.Form):
         full_name = (self.cleaned_data.get('full_name') or '').strip()
         username = (self.cleaned_data.get('username') or '').strip()
         new_password = self.cleaned_data.get('new_password1')
+        avatar = self.cleaned_data.get('avatar')
 
+        # Update user fields
         self.user.first_name = full_name
         self.user.last_name = username
 
@@ -101,4 +109,11 @@ class EditProfileForm(forms.Form):
             self.user.set_password(new_password)
 
         self.user.save()
+
+        # Update or create profile avatar
+        profile, _ = UserProfile.objects.get_or_create(user=self.user)
+        if avatar:
+            profile.avatar = avatar
+            profile.save()
+
         return self.user

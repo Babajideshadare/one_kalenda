@@ -3,50 +3,103 @@
 {% block content %}
 <div class="profile-container">
     <div class="profile-card">
-        <!-- Header: avatar + name -->
-        <div class="profile-header-row">
-            <div class="profile-avatar-circle"></div>
-            <div class="profile-header-text">
-                <div class="profile-display-name">
-                    {{ request.user.first_name|default:request.user.username }}
-                </div>
-                <div class="profile-edit-image-text">
-                    Edit Profile Image
-                </div>
-            </div>
+        <div class="profile-edit-header">
+            <h2>Edit Profile</h2>
+            <button type="submit" form="edit-profile-form" class="profile-primary-btn profile-save-btn">
+                Save
+            </button>
         </div>
 
-        <!-- Read-only fields -->
-        <div class="profile-form">
-            <div class="profile-field-group">
-                <label>Name</label>
-                <div class="profile-field-value">
-                    {{ request.user.first_name|default:"—" }}
+        <form method="post" id="edit-profile-form" class="profile-form" enctype="multipart/form-data">
+            {% csrf_token %}
+
+            {% if form.non_field_errors %}
+                <div class="field-error">
+                    {{ form.non_field_errors.0 }}
                 </div>
+            {% endif %}
+
+            <div class="profile-field-group">
+                <label for="{{ form.full_name.id_for_label }}">Full Name</label>
+                <input
+                    type="text"
+                    name="{{ form.full_name.name }}"
+                    id="{{ form.full_name.id_for_label }}"
+                    value="{{ form.full_name.value|default_if_none:form.fields.full_name.initial }}"
+                    class="profile-input"
+                    placeholder="Your First Name"
+                >
+                {% if form.full_name.errors %}
+                    <div class="field-error">{{ form.full_name.errors.0 }}</div>
+                {% endif %}
             </div>
 
             <div class="profile-field-group">
-                <label>Username</label>
-                <div class="profile-field-value">
-                    {% if request.user.last_name %}
-                        {{ request.user.last_name }}
-                    {% else %}
-                        No Username
-                    {% endif %}
-                </div>
+                <label for="{{ form.username.id_for_label }}">Username</label>
+                <input
+                    type="text"
+                    name="{{ form.username.name }}"
+                    id="{{ form.username.id_for_label }}"
+                    value="{{ form.username.value|default_if_none:form.fields.username.initial }}"
+                    class="profile-input"
+                    placeholder="Your First Name"
+                >
+                {% if form.username.errors %}
+                    <div class="field-error">{{ form.username.errors.0 }}</div>
+                {% endif %}
             </div>
 
             <div class="profile-field-group">
-                <label>Email</label>
-                <div class="profile-field-value">
-                    {{ request.user.email|default:"—" }}
-                </div>
+                <label for="{{ form.avatar.id_for_label }}">Profile Image</label>
+                <input
+                    type="file"
+                    name="{{ form.avatar.name }}"
+                    id="{{ form.avatar.id_for_label }}"
+                    class="profile-input"
+                    accept="image/*"
+                >
+                {% if avatar_url %}
+                    <div class="profile-avatar-preview-wrapper">
+                        <img src="{{ avatar_url }}" alt="Current profile image" class="profile-avatar-preview">
+                    </div>
+                {% endif %}
+                {% if form.avatar.errors %}
+                    <div class="field-error">{{ form.avatar.errors.0 }}</div>
+                {% endif %}
             </div>
 
-            <a href="{% url 'edit_profile' %}" class="profile-primary-btn profile-edit-link">
-                Edit Profile
-            </a>
-        </div>
+            <div class="profile-section-label">
+                Change Password
+            </div>
+
+            <div class="profile-field-group">
+                <label for="{{ form.new_password1.id_for_label }}">New Password</label>
+                <input
+                    type="password"
+                    name="{{ form.new_password1.name }}"
+                    id="{{ form.new_password1.id_for_label }}"
+                    class="profile-input"
+                    placeholder="New Password"
+                >
+                {% if form.new_password1.errors %}
+                    <div class="field-error">{{ form.new_password1.errors.0 }}</div>
+                {% endif %}
+            </div>
+
+            <div class="profile-field-group">
+                <label for="{{ form.new_password2.id_for_label }}">Confirm Password</label>
+                <input
+                    type="password"
+                    name="{{ form.new_password2.name }}"
+                    id="{{ form.new_password2.id_for_label }}"
+                    class="profile-input"
+                    placeholder="Confirm Password"
+                >
+                {% if form.new_password2.errors %}
+                    <div class="field-error">{{ form.new_password2.errors.0 }}</div>
+                {% endif %}
+            </div>
+        </form>
     </div>
 </div>
 {% endblock %}

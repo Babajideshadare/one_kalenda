@@ -766,3 +766,14 @@ body {
     color: #000000;
     margin: 8px 0 8px 0;
 }
+
+.profile-avatar-preview-wrapper {
+    margin-top: 8px;
+}
+
+.profile-avatar-preview {
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    object-fit: cover;
+}
