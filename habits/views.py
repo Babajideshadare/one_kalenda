@@ -244,7 +244,13 @@ def logout_view(request):
 def profile(request):
     """
     Read-only profile page showing basic user info + avatar + Edit Profile button.
+    Also passes entries/active_entry so sidebar + tab bar work.
     """
+    # Sidebar + tabs context
+    entries = CalendarEntry.objects.filter(user=request.user).order_by('order', 'id')
+    active_entry = entries.first() if entries else None
+
+    # Avatar
     avatar_url = None
     try:
         profile_obj = request.user.profile
@@ -253,14 +259,25 @@ def profile(request):
     except UserProfile.DoesNotExist:
         pass
 
-    return render(request, 'habits/profile.html', {'avatar_url': avatar_url})
+    context = {
+        'entries': entries,
+        'active_entry': active_entry,
+        'avatar_url': avatar_url,
+    }
+    return render(request, 'habits/profile.html', context)
 
 
 @login_required
 def edit_profile(request):
     """
     Edit profile details (full name, username), change password, and upload avatar.
+    Also passes entries/active_entry so sidebar + tab bar work.
     """
+    # Sidebar + tabs context
+    entries = CalendarEntry.objects.filter(user=request.user).order_by('order', 'id')
+    active_entry = entries.first() if entries else None
+
+    # Current avatar
     avatar_url = None
     try:
         profile_obj = request.user.profile
@@ -280,7 +297,10 @@ def edit_profile(request):
     else:
         form = EditProfileForm(user=request.user)
 
-    return render(request, 'habits/edit_profile.html', {
+    context = {
+        'entries': entries,
+        'active_entry': active_entry,
         'form': form,
         'avatar_url': avatar_url,
-    })
+    }
+    return render(request, 'habits/edit_profile.html', context)
