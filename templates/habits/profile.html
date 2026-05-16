@@ -3,7 +3,7 @@
 {% block content %}
 <div class="profile-container">
     <div class="profile-card">
-        <!-- Header: avatar + name -->
+        <!-- Header: avatar + username as profile name -->
         <div class="profile-header-row">
             <div
                 class="profile-avatar-circle"
@@ -16,7 +16,13 @@
             ></div>
             <div class="profile-header-text">
                 <div class="profile-display-name">
-                    {{ request.user.first_name|default:request.user.username }}
+                    {% if request.user.last_name %}
+                        {{ request.user.last_name }}          {# username / handle #}
+                    {% elif request.user.first_name %}
+                        {{ request.user.first_name }}         {# fallback: full name #}
+                    {% else %}
+                        {{ request.user.username }}           {# fallback: login (email) #}
+                    {% endif %}
                 </div>
                 <a href="{% url 'edit_profile' %}" class="profile-edit-image-text-link">
                     Edit Profile Image
