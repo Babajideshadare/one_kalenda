@@ -777,3 +777,14 @@ body {
     border-radius: 50%;
     object-fit: cover;
 }
+
+.profile-edit-image-text-link {
+    font-size: 13px;
+    color: #888888;          /* same grey as the design */
+    text-decoration: none;
+    cursor: pointer;         /* still obviously clickable */
+}
+
+.profile-edit-image-text-link:hover {
+    text-decoration: underline;
+}
