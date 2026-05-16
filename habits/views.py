@@ -5,6 +5,7 @@ from django.contrib.auth import login, update_session_auth_hash
 from django.contrib.auth import logout as auth_logout
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect, get_object_or_404
+from django.utils import timezone
 
 from .models import CalendarEntry, CalendarDay, UserProfile
 from .forms import RegisterForm, EditProfileForm
@@ -37,7 +38,8 @@ def home(request):
         except CalendarEntry.DoesNotExist:
             active_entry = entries.first() if entries else None
 
-    today = date.today()
+    # Use local date in your configured TIME_ZONE (e.g. Africa/Lagos)
+    today = timezone.localdate()
 
     # 2) Determine selected date from GET only (keeps previous selection)
     selected_date = today
