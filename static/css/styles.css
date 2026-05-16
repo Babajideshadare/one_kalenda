@@ -350,12 +350,12 @@ body {
     color: #555555;
 }
 
-/* Day cells */
+/* Day cells (anchor links now) */
 .day {
     text-align: center;
     padding: 6px 0;
     font-size: 14px;
-    cursor: default;
+    cursor: pointer;
     border-radius: 50%;
     width: 32px;
     height: 32px;
@@ -363,6 +363,10 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
+
+    /* remove default link styles */
+    text-decoration: none;
+    color: #000000;
 }
 
 /* Previous/next month days */
