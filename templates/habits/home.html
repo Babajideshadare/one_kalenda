@@ -3,7 +3,7 @@
 {% block content %}
 {% if active_entry %}
     <div class="calendar-section">
-        <!-- Calendar card (real month, clickable days) -->
+        <!-- Calendar card -->
         <div class="calendar-card">
             <div class="calendar-header">
                 <button class="month-nav" type="button">&lt;</button>
@@ -21,38 +21,41 @@
                 <div class="weekday">FI</div>
                 <div class="weekday">SA</div>
 
-                <!-- Real days for the month; each day is a link that selects that date -->
+                <!-- Real days with status + click-to-cycle -->
                 {% for week in weeks %}
-                    {% for day_date in week %}
-                        {% if day_date.month != display_month %}
-                            <a
-                                href="{% url 'home' %}?entry_id={{ active_entry.id }}&date={{ day_date|date:'Y-m-d' }}"
-                                class="day muted"
-                            >
-                                {{ day_date.day }}
-                            </a>
-                        {% elif day_date == selected_date %}
-                            <a
-                                href="{% url 'home' %}?entry_id={{ active_entry.id }}&date={{ day_date|date:'Y-m-d' }}"
-                                class="day selected"
-                            >
-                                {{ day_date.day }}
-                            </a>
-                        {% elif day_date == today %}
-                            <a
-                                href="{% url 'home' %}?entry_id={{ active_entry.id }}&date={{ day_date|date:'Y-m-d' }}"
-                                class="day today"
-                            >
-                                {{ day_date.day }}
-                            </a>
-                        {% else %}
-                            <a
-                                href="{% url 'home' %}?entry_id={{ active_entry.id }}&date={{ day_date|date:'Y-m-d' }}"
-                                class="day"
-                            >
-                                {{ day_date.day }}
-                            </a>
-                        {% endif %}
+                    {% for cell in week %}
+                        {% with day_date=cell.date status=cell.status %}
+                            {% comment %} Compute classes for this day {% endcomment %}
+                            {% if day_date.month != display_month %}
+                                {% with base_class="day muted" %}
+                            {% elif day_date == selected_date %}
+                                {% with base_class="day selected" %}
+                            {% elif day_date == today %}
+                                {% with base_class="day today" %}
+                            {% else %}
+                                {% with base_class="day" %}
+                            {% endif %}
+                                {% if status == 'done' %}
+                                    {% with full_class=base_class|add:" day-done" %}
+                                {% elif status == 'cancel' %}
+                                    {% with full_class=base_class|add:" day-cancel" %}
+                                {% else %}
+                                    {% with full_class=base_class %}
+                                {% endif %}
+
+                                <form method="post" class="day-form">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="entry_id" value="{{ active_entry.id }}">
+                                    <input type="hidden" name="date" value="{{ day_date|date:'Y-m-d' }}">
+                                    <input type="hidden" name="action" value="click_day">
+                                    <button type="submit" class="{{ full_class }}">
+                                        {{ day_date.day }}
+                                    </button>
+                                </form>
+
+                                {% endwith %}{# full_class #}
+                            {% endwith %}{# base_class #}
+                        {% endwith %}{# day_date, status #}
                     {% endfor %}
                 {% endfor %}
             </div>

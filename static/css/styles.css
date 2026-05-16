@@ -65,7 +65,7 @@ body {
     background: none;
     border: none;
     color: #000000;
-    font-size: 20px;    /* approximate 25x25 visual size */
+    font-size: 20px;
     cursor: pointer;
 }
 
@@ -88,7 +88,7 @@ body {
 }
 
 .topbar-plus {
-    font-size: 16px;  /* plus icon in top bar */
+    font-size: 16px;
 }
 
 .topbar-link {
@@ -109,8 +109,8 @@ body {
 /* Sidebar */
 .sidebar {
     width: 240px;
-    background-color: #ffffff;  /* side bar: ffffff, 100% */
-    border-right: 0.5px solid rgba(0, 0, 0, 0.15); /* line: 0.5px, 000000, 15% */
+    background-color: #ffffff;
+    border-right: 0.5px solid rgba(0, 0, 0, 0.15);
     padding-top: 24px;
     transition: width 0.4s ease-in-out, padding 0.4s ease-in-out, opacity 0.4s ease-in-out;
     overflow: hidden;
@@ -121,7 +121,6 @@ body {
     flex-direction: column;
 }
 
-/* Sidebar general item */
 .sidebar-item {
     display: flex;
     align-items: center;
@@ -132,14 +131,12 @@ body {
     font-size: 16px;
 }
 
-/* Calendar View header item */
 .sidebar-calendar-header {
     padding-right: 12px;
 }
 
-/* Sidebar icons */
 .sidebar-icon {
-    width: 15px;              /* 15px by 15px */
+    width: 15px;
     height: 15px;
     font-size: 15px;
     display: inline-flex;
@@ -148,25 +145,22 @@ body {
     color: #000000;
 }
 
-/* Dropdown toggle button */
 .sidebar-entries-toggle {
     margin-left: auto;
     background: none;
     border: none;
-    font-size: 20px;          /* dropdown icon: 25px visually */
+    font-size: 20px;
     line-height: 1;
     cursor: pointer;
 }
 
-/* Nested CalendarEntry list under Calendar View */
 .sidebar-entries {
     display: flex;
     flex-direction: column;
-    margin-left: 40px;        /* indent nested entries */
+    margin-left: 40px;
     margin-bottom: 8px;
 }
 
-/* Individual nested entry */
 .sidebar-entry {
     padding: 6px 12px;
     border-radius: 6px;
@@ -175,22 +169,18 @@ body {
     font-size: 14px;
 }
 
-/* Active nested entry highlight: cbeef3, 47% */
 .sidebar-entry.active {
-    background-color: rgba(203, 238, 243, 0.47);
+    background-color: rgba(203, 238, 243, 0.47); /* cbeef3, 47% */
 }
 
-/* Collapsed state for nested entries */
 .sidebar-entries.collapsed {
     display: none;
 }
 
-/* Hover effect for top-level items */
 .sidebar-item:hover {
     background-color: rgba(0, 0, 0, 0.03);
 }
 
-/* Collapsed sidebar: fully hidden */
 .sidebar.collapsed {
     width: 0;
     padding-top: 0;
@@ -201,12 +191,12 @@ body {
 /* Main content area */
 .content-wrapper {
     flex: 1;
-    background-color: #efefef; /* background matches root */
+    background-color: #efefef;
     display: flex;
     flex-direction: column;
 }
 
-/* Horizontal tab bar */
+/* Tab bar */
 .tab-bar {
     display: flex;
     align-items: center;
@@ -215,11 +205,10 @@ body {
     background-color: #efefef;
 }
 
-/* Tabs (CalendarEntry names) */
 .tab-item {
     padding: 8px 16px;
     border-radius: 6px 6px 0 0;
-    border: 0.5px solid rgba(0, 0, 0, 0.05); /* 000000, 5%, 0.5px */
+    border: 0.5px solid rgba(0, 0, 0, 0.05);
     background-color: #ffffff;
     font-size: 14px;
     color: #000000;
@@ -227,18 +216,16 @@ body {
     text-decoration: none;
 }
 
-/* Active tab: 3b5bdb, 15% */
 .tab-item.active {
-    background-color: rgba(59, 91, 219, 0.15); /* Tab selector: 3b5bdb, 15% */
+    background-color: rgba(59, 91, 219, 0.15); /* 3b5bdb, 15% */
 }
 
-/* '+' tab */
 .tab-item.tab-add {
     width: 36px;
     text-align: center;
 }
 
-/* Page content (where home.html goes) */
+/* Page content */
 .page-content {
     flex: 1;
     display: flex;
@@ -246,7 +233,7 @@ body {
     justify-content: center;
 }
 
-/* Empty state inside page content */
+/* Empty state */
 .empty-state {
     display: flex;
     flex-direction: column;
@@ -255,11 +242,10 @@ body {
     gap: 8px;
 }
 
-/* Big calendar icon: black, 15%, 63px by 63px */
 .empty-icon {
     width: 63px;
     height: 63px;
-    font-size: 40px;  /* visually fill 63x63 area */
+    font-size: 40px;
     border-radius: 8px;
     display: flex;
     align-items: center;
@@ -267,21 +253,19 @@ body {
     color: rgba(0, 0, 0, 0.15);
 }
 
-/* "Add Calendar Entry" text */
 .empty-text {
     font-size: 16px;
     color: #000000;
 }
 
-/* Plus icon: 12px by 12px */
 .empty-plus {
-    width: 24px;             /* button slightly larger than icon */
+    width: 24px;
     height: 24px;
     border-radius: 12px;
     border: 0.5px solid rgba(0, 0, 0, 0.15);
     background-color: #ffffff;
     color: #000000;
-    font-size: 12px;         /* plus icon 12px */
+    font-size: 12px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -289,10 +273,7 @@ body {
     text-decoration: none;
 }
 
-/* ============================= */
-/* Calendar + Daily Notes layout */
-/* ============================= */
-
+/* Calendar + notes layout */
 .calendar-section {
     width: 100%;
     max-width: 900px;
@@ -303,18 +284,16 @@ body {
     gap: 24px;
 }
 
-/* Cards share look with popup shadow spec */
 .calendar-card,
 .notes-card {
     background-color: #ffffff;
     border-radius: 12px;
-    box-shadow: 4px 4px 15px rgba(0, 0, 0, 0.15); /* x:4, y:4, blur:15 */
+    box-shadow: 4px 4px 15px rgba(0, 0, 0, 0.15);
     overflow: hidden;
 }
 
-/* Calendar header (green strip with month + nav) */
 .calendar-header {
-    background-color: #d7ecd8; /* approximate soft green */
+    background-color: #d7ecd8;
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -333,7 +312,6 @@ body {
     font-weight: 500;
 }
 
-/* Calendar grid */
 .calendar-grid {
     display: grid;
     grid-template-columns: repeat(7, 1fr);
@@ -342,7 +320,6 @@ body {
     background-color: #ffffff;
 }
 
-/* Weekday headings */
 .weekday {
     text-align: center;
     font-size: 12px;
@@ -350,7 +327,13 @@ body {
     color: #555555;
 }
 
-/* Day cells (anchor links now) */
+/* Day forms */
+.day-form {
+    display: flex;
+    justify-content: center;
+}
+
+/* Day buttons */
 .day {
     text-align: center;
     padding: 6px 0;
@@ -364,29 +347,37 @@ body {
     align-items: center;
     justify-content: center;
 
-    /* remove default link styles */
-    text-decoration: none;
+    border: none;
+    background-color: transparent;
     color: #000000;
 }
 
-/* Previous/next month days */
 .day.muted {
     color: #cccccc;
 }
 
-/* Selected day highlight (blue circle) */
-.day.selected {
-    background-color: rgba(59, 91, 219, 0.15);
-    border: 1px solid rgba(59, 91, 219, 0.3);
-}
-
-/* Subtle highlight for today's real date when not selected */
+/* Today subtle highlight */
 .day.today {
     border: 1px solid rgba(0, 0, 0, 0.15);
     background-color: rgba(0, 0, 0, 0.03);
 }
 
-/* Daily Notes card */
+/* Selected day */
+.day.selected {
+    background-color: rgba(59, 91, 219, 0.15);
+    border: 1px solid rgba(59, 91, 219, 0.3);
+}
+
+/* Status styles */
+.day-done {
+    box-shadow: 0 0 0 2px #4fc192;
+}
+
+.day-cancel {
+    box-shadow: 0 0 0 2px #ff6b6b;
+}
+
+/* Notes card */
 .notes-header {
     padding: 10px 24px;
     border-bottom: 0.5px solid rgba(0, 0, 0, 0.15);
@@ -411,14 +402,12 @@ body {
     resize: vertical;
 }
 
-/* Notes date label */
 .notes-date-label {
     font-size: 12px;
     color: #888888;
     margin-left: 8px;
 }
 
-/* Notes form actions */
 .notes-form {
     display: flex;
     flex-direction: column;
@@ -434,16 +423,13 @@ body {
     padding: 6px 16px;
     border-radius: 8px;
     border: none;
-    background-color: #4fc192; /* Yes button color */
+    background-color: #4fc192;
     color: #ffffff;
     font-size: 14px;
     cursor: pointer;
 }
 
-/* =================== */
-/* Rename page layout */
-/* =================== */
-
+/* Rename page */
 .rename-page {
     width: 100%;
     display: flex;
@@ -451,13 +437,12 @@ body {
     justify-content: center;
 }
 
-/* Modal-style card reused on rename page */
 .modal-card {
     width: 360px;
     max-width: 90%;
     background-color: #ffffff;
     border-radius: 12px;
-    box-shadow: 4px 4px 15px rgba(0, 0, 0, 0.15); /* drop shadow spec */
+    box-shadow: 4px 4px 15px rgba(0, 0, 0, 0.15);
     overflow: hidden;
 }
 
@@ -468,7 +453,7 @@ body {
 
 .modal-header {
     padding: 12px 24px;
-    border-bottom: 0.5px solid rgba(0, 0, 0, 0.15); /* lines & stroke */
+    border-bottom: 0.5px solid rgba(0, 0, 0, 0.15);
     font-size: 14px;
     font-weight: 500;
 }
@@ -481,9 +466,9 @@ body {
     width: 100%;
     padding: 8px 10px;
     border-radius: 8px;
-    border: 0.5px solid rgba(0, 0, 0, 0.05); /* 000000, 5%, 0.5px */
-    background-color: #efefef;               /* rename box: efefef, 100% */
-    font-size: 18px;                         /* Daily Exercise text size */
+    border: 0.5px solid rgba(0, 0, 0, 0.05);
+    background-color: #efefef;
+    font-size: 18px;
     font-family: inherit;
 }
 
@@ -503,13 +488,11 @@ body {
     cursor: pointer;
 }
 
-/* No button: efefef */
 .modal-btn-no {
     background-color: #efefef;
     color: #000000;
 }
 
-/* Yes button: 4fc192, 100% */
 .modal-btn-yes {
     background-color: #4fc192;
     color: #ffffff;

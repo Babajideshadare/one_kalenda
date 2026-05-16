@@ -7,18 +7,19 @@ from .models import CalendarEntry, CalendarDay
 
 def home(request):
     """
-    Home page: show layout, entries in sidebar and as tabs, and for an active entry
-    show a real calendar for the selected month + Daily Notes for the selected date.
-
-    - selected_date defaults to today.
-    - GET 'entry_id' selects the active entry.
-    - GET or POST 'date' (YYYY-MM-DD) selects the active date.
-    - POST from notes form saves notes for (active_entry, selected_date).
+    Home page: layout + sidebar + tabs.
+    Calendar:
+      - Shows real month for selected_date.
+      - Clicking a day:
+        * selects that date
+        * cycles its status: none -> done -> cancel -> none.
+    Daily notes:
+      - Saved per (entry, selected_date).
     """
     entries = CalendarEntry.objects.all().order_by('order', 'id')
     active_entry = entries.first() if entries else None
 
-    # Determine active entry from GET or POST
+    # 1) Determine active entry
     entry_id = request.GET.get('entry_id') or request.POST.get('entry_id')
     if entry_id and entries.exists():
         try:
@@ -26,43 +27,85 @@ def home(request):
         except CalendarEntry.DoesNotExist:
             pass
 
-    # Today's real date (for subtle highlight)
+    # 2) Determine selected date
     today = date.today()
-
-    # Determine selected date from GET or POST; default to today
     selected_date = today
     date_str = request.GET.get('date') or request.POST.get('date')
     if date_str:
         try:
             selected_date = datetime.strptime(date_str, '%Y-%m-%d').date()
         except ValueError:
-            # ignore invalid dates and stick with today
             selected_date = today
 
-    # Compute calendar for the month of selected_date
-    display_year = selected_date.year
-    display_month = selected_date.month
-    cal = calendar.Calendar(firstweekday=6)  # 6 = Sunday
-    weeks = cal.monthdatescalendar(display_year, display_month)
-    month_label = selected_date.strftime('%B %Y').upper()
+    day_obj = None
 
-    day = None
+    # 3) Handle POST actions (click day / save notes)
+    if active_entry and request.method == 'POST':
+        action = request.POST.get('action')
 
-    if active_entry:
-        # Handle saving notes (POST) from the notes form only
-        if request.method == 'POST' and 'notes' in request.POST:
-            notes = request.POST.get('notes', '')
-            day, _created = CalendarDay.objects.get_or_create(
+        # Clicking a day cell: cycle status and select that date
+        if action == 'click_day':
+            # For click_day, we trust the posted date
+            click_date_str = request.POST.get('date')
+            try:
+                selected_date = datetime.strptime(click_date_str, '%Y-%m-%d').date()
+            except (TypeError, ValueError):
+                selected_date = today
+
+            day_obj, _created = CalendarDay.objects.get_or_create(
                 entry=active_entry,
                 date=selected_date,
             )
-            day.notes = notes
-            day.save()
-            # Redirect to avoid form re-submission and keep active entry & date
+            if day_obj.status == 'none':
+                day_obj.status = 'done'
+            elif day_obj.status == 'done':
+                day_obj.status = 'cancel'
+            else:
+                day_obj.status = 'none'
+            day_obj.save()
+
             return redirect(f"/?entry_id={active_entry.id}&date={selected_date.isoformat()}")
 
-        # On GET: fetch existing day if any
-        day = CalendarDay.objects.filter(
+        # Saving notes for selected_date
+        if 'notes' in request.POST:
+            notes = request.POST.get('notes', '')
+            day_obj, _created = CalendarDay.objects.get_or_create(
+                entry=active_entry,
+                date=selected_date,
+            )
+            day_obj.notes = notes
+            day_obj.save()
+
+            return redirect(f"/?entry_id={active_entry.id}&date={selected_date.isoformat()}")
+
+    # 4) Compute calendar weeks and attach status
+    display_year = selected_date.year
+    display_month = selected_date.month
+    cal = calendar.Calendar(firstweekday=6)  # 6 = Sunday
+    weeks_raw = cal.monthdatescalendar(display_year, display_month)
+    month_label = selected_date.strftime('%B %Y').upper()
+
+    # Build status map for visible dates
+    weeks = []
+    if active_entry:
+        visible_dates = {d for w in weeks_raw for d in w}
+        days_qs = CalendarDay.objects.filter(entry=active_entry, date__in=visible_dates)
+        status_map = {d.date: d.status for d in days_qs}
+    else:
+        status_map = {}
+
+    for w in weeks_raw:
+        week = []
+        for d in w:
+            week.append({
+                'date': d,
+                'status': status_map.get(d, 'none'),
+            })
+        weeks.append(week)
+
+    # 5) Day object for notes textarea (after potential POST redirects)
+    if active_entry and day_obj is None:
+        day_obj = CalendarDay.objects.filter(
             entry=active_entry,
             date=selected_date
         ).first()
@@ -72,21 +115,16 @@ def home(request):
         'active_entry': active_entry,
         'selected_date': selected_date,
         'today': today,
-        'day': day,
+        'day': day_obj,  # used by notes textarea
         'display_year': display_year,
         'display_month': display_month,
-        'weeks': weeks,
+        'weeks': weeks,  # list of weeks; each week is list of {'date', 'status'}
         'month_label': month_label,
     }
     return render(request, 'habits/home.html', context)
 
 
 def create_calendar_entry(request):
-    """
-    Create a new CalendarEntry (tab) with a default name like 'Tab 1', 'Tab 2', ...
-    Limit to a maximum of 10 entries. After creation, redirect back to home and
-    make the new entry active.
-    """
     MAX_ENTRIES = 10
     entries = CalendarEntry.objects.all().order_by('order', 'id')
     count = entries.count()
@@ -100,18 +138,13 @@ def create_calendar_entry(request):
     new_entry = CalendarEntry.objects.create(
         name=default_name,
         order=count,
-        user=None,   # will be set when auth is added
+        user=None,
     )
 
     return redirect(f"/?entry_id={new_entry.id}")
 
 
 def rename_calendar_entry(request, pk):
-    """
-    Separate page to rename a CalendarEntry.
-    GET: show form with current name.
-    POST: save new name and redirect back to home with this entry active.
-    """
     entry = get_object_or_404(CalendarEntry, pk=pk)
 
     if request.method == 'POST':
@@ -121,5 +154,4 @@ def rename_calendar_entry(request, pk):
             entry.save()
         return redirect(f"/?entry_id={entry.id}")
 
-    # GET: show rename form
     return render(request, 'habits/rename_entry.html', {'entry': entry})
