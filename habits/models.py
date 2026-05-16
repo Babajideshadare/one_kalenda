@@ -4,8 +4,7 @@ from django.contrib.auth.models import User
 
 class CalendarEntry(models.Model):
     """
-    One calendar entry / habit.
-    This is what each top tab and sidebar item represents (e.g. 'Daily Exercise').
+    One calendar entry / habit (tab + sidebar entry).
     """
     user = models.ForeignKey(
         User,
@@ -15,7 +14,7 @@ class CalendarEntry(models.Model):
         related_name='calendar_entries',
     )
     name = models.CharField(max_length=100)
-    order = models.PositiveIntegerField(default=0)  # for tab ordering 0..9
+    order = models.PositiveIntegerField(default=0)  # tab order
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
@@ -27,8 +26,8 @@ class CalendarEntry(models.Model):
 
 class CalendarDay(models.Model):
     """
-    One day for a given CalendarEntry (tab) with its notes.
-    There is at most one CalendarDay per (entry, date).
+    One day for a given CalendarEntry with notes and a simple status.
+    At most one CalendarDay per (entry, date).
     """
     entry = models.ForeignKey(
         CalendarEntry,
@@ -37,6 +36,15 @@ class CalendarDay(models.Model):
     )
     date = models.DateField()
     notes = models.TextField(blank=True)
+    status = models.CharField(
+        max_length=10,
+        choices=[
+            ('none', 'No status'),
+            ('done', 'Completed'),
+            ('cancel', 'Cancelled'),
+        ],
+        default='none',
+    )
     updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
@@ -44,4 +52,4 @@ class CalendarDay(models.Model):
         ordering = ['-date']
 
     def __str__(self):
-        return f'{self.entry.name} on {self.date}'
+        return f'{self.entry.name} on {self.date} ({self.status})'

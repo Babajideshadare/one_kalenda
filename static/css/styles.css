@@ -301,11 +301,30 @@ body {
     font-size: 14px;
 }
 
+/* Month navigation arrows (< and >) */
 .month-nav {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
     background: none;
     border: none;
+
     font-size: 18px;
+    color: #000000;          /* match text color */
+    text-decoration: none;   /* remove link underline */
+
+    padding: 0 8px;
     cursor: pointer;
+}
+
+.month-nav:hover {
+    background-color: rgba(0, 0, 0, 0.03); /* subtle hover */
+    border-radius: 50%;
+}
+
+.month-nav:focus {
+    outline: none;
 }
 
 .month-label {
@@ -427,6 +446,17 @@ body {
     color: #ffffff;
     font-size: 14px;
     cursor: pointer;
+}
+
+.today-link {
+    margin-left: 12px;
+    font-size: 12px;
+    color: #555555;
+    text-decoration: none;
+}
+
+.today-link:hover {
+    text-decoration: underline;
 }
 
 /* Rename page */
