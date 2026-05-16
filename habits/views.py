@@ -1,5 +1,5 @@
 import calendar
-from datetime import date
+from datetime import date, datetime
 
 from django.shortcuts import render, redirect, get_object_or_404
 from .models import CalendarEntry, CalendarDay
@@ -8,16 +8,17 @@ from .models import CalendarEntry, CalendarDay
 def home(request):
     """
     Home page: show layout, entries in sidebar and as tabs, and for an active entry
-    show a real calendar for the current month + Daily Notes for a single date
-    (selected_date, which is today for now).
+    show a real calendar for the selected month + Daily Notes for the selected date.
 
-    POST from notes form: save notes for the active entry + selected date.
-    GET: display current notes.
+    - selected_date defaults to today.
+    - GET 'entry_id' selects the active entry.
+    - GET or POST 'date' (YYYY-MM-DD) selects the active date.
+    - POST from notes form saves notes for (active_entry, selected_date).
     """
     entries = CalendarEntry.objects.all().order_by('order', 'id')
     active_entry = entries.first() if entries else None
 
-    # Determine active entry id from GET or POST
+    # Determine active entry from GET or POST
     entry_id = request.GET.get('entry_id') or request.POST.get('entry_id')
     if entry_id and entries.exists():
         try:
@@ -25,17 +26,24 @@ def home(request):
         except CalendarEntry.DoesNotExist:
             pass
 
-    # For now, use today's date as the selected date
+    # Determine selected date from GET or POST; default to today
     selected_date = date.today()
-    day = None
+    date_str = request.GET.get('date') or request.POST.get('date')
+    if date_str:
+        try:
+            selected_date = datetime.strptime(date_str, '%Y-%m-%d').date()
+        except ValueError:
+            # ignore invalid dates and stick with today
+            pass
 
     # Compute calendar for the month of selected_date
     display_year = selected_date.year
     display_month = selected_date.month
     cal = calendar.Calendar(firstweekday=6)  # 6 = Sunday
-    # weeks is a list of weeks; each week is a list of 7 date objects (including prev/next month days)
     weeks = cal.monthdatescalendar(display_year, display_month)
     month_label = selected_date.strftime('%B %Y').upper()
+
+    day = None
 
     if active_entry:
         # Handle saving notes (POST) from the notes form only
@@ -47,8 +55,8 @@ def home(request):
             )
             day.notes = notes
             day.save()
-            # Redirect to avoid form re-submission and keep active entry
-            return redirect(f"/?entry_id={active_entry.id}")
+            # Redirect to avoid form re-submission and keep active entry & date
+            return redirect(f"/?entry_id={active_entry.id}&date={selected_date.isoformat()}")
 
         # On GET: fetch existing day if any
         day = CalendarDay.objects.filter(

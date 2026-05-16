@@ -3,7 +3,7 @@
 {% block content %}
 {% if active_entry %}
     <div class="calendar-section">
-        <!-- Calendar card (now driven by real month data) -->
+        <!-- Calendar card (real month, clickable days) -->
         <div class="calendar-card">
             <div class="calendar-header">
                 <button class="month-nav" type="button">&lt;</button>
@@ -21,15 +21,30 @@
                 <div class="weekday">FI</div>
                 <div class="weekday">SA</div>
 
-                <!-- Real days for the month -->
+                <!-- Real days for the month; each day is a link that selects that date -->
                 {% for week in weeks %}
                     {% for day_date in week %}
                         {% if day_date.month != display_month %}
-                            <div class="day muted">{{ day_date.day }}</div>
+                            <a
+                                href="{% url 'home' %}?entry_id={{ active_entry.id }}&date={{ day_date|date:'Y-m-d' }}"
+                                class="day muted"
+                            >
+                                {{ day_date.day }}
+                            </a>
                         {% elif day_date == selected_date %}
-                            <div class="day selected">{{ day_date.day }}</div>
+                            <a
+                                href="{% url 'home' %}?entry_id={{ active_entry.id }}&date={{ day_date|date:'Y-m-d' }}"
+                                class="day selected"
+                            >
+                                {{ day_date.day }}
+                            </a>
                         {% else %}
-                            <div class="day">{{ day_date.day }}</div>
+                            <a
+                                href="{% url 'home' %}?entry_id={{ active_entry.id }}&date={{ day_date|date:'Y-m-d' }}"
+                                class="day"
+                            >
+                                {{ day_date.day }}
+                            </a>
                         {% endif %}
                     {% endfor %}
                 {% endfor %}
@@ -56,6 +71,7 @@
                     >{% if day %}{{ day.notes }}{% endif %}</textarea>
 
                     <input type="hidden" name="entry_id" value="{{ active_entry.id }}">
+                    <input type="hidden" name="date" value="{{ selected_date|date:'Y-m-d' }}">
 
                     <div class="notes-actions">
                         <button type="submit" class="notes-save-btn">
