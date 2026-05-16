@@ -1,10 +1,15 @@
 import calendar
 from datetime import date, datetime
 
+from django.contrib.auth import login
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.forms import UserCreationForm
 from django.shortcuts import render, redirect, get_object_or_404
+
 from .models import CalendarEntry, CalendarDay
 
 
+@login_required
 def home(request):
     """
     Home page: layout + sidebar + tabs.
@@ -167,7 +172,13 @@ def home(request):
     return render(request, 'habits/home.html', context)
 
 
+@login_required
 def create_calendar_entry(request):
+    """
+    Create a new CalendarEntry (tab) with a default name like 'Tab 1', 'Tab 2', ...
+    Limit to a maximum of 10 entries. After creation, redirect back to home and
+    make the new entry active.
+    """
     MAX_ENTRIES = 10
     entries = CalendarEntry.objects.all().order_by('order', 'id')
     count = entries.count()
@@ -181,13 +192,19 @@ def create_calendar_entry(request):
     new_entry = CalendarEntry.objects.create(
         name=default_name,
         order=count,
-        user=None,
+        user=None,   # will be set to request.user in next phase
     )
 
     return redirect(f"/?entry_id={new_entry.id}")
 
 
+@login_required
 def rename_calendar_entry(request, pk):
+    """
+    Separate page to rename a CalendarEntry.
+    GET: show form with current name.
+    POST: save new name and redirect back to home with this entry active.
+    """
     entry = get_object_or_404(CalendarEntry, pk=pk)
 
     if request.method == 'POST':
@@ -198,3 +215,20 @@ def rename_calendar_entry(request, pk):
         return redirect(f"/?entry_id={entry.id}")
 
     return render(request, 'habits/rename_entry.html', {'entry': entry})
+
+
+def register(request):
+    """
+    Simple registration view using Django's UserCreationForm.
+    On successful registration, logs the user in and redirects to home.
+    """
+    if request.method == 'POST':
+        form = UserCreationForm(request.POST)
+        if form.is_valid():
+            user = form.save()
+            login(request, user)
+            return redirect('home')
+    else:
+        form = UserCreationForm()
+
+    return render(request, 'registration/register.html', {'form': form})
