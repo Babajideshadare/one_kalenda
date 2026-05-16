@@ -9,9 +9,15 @@
             {{ form.non_field_errors }}
 
             <div class="auth-field">
-                <label for="{{ form.username.id_for_label }}">Username</label>
-                {{ form.username }}
-                {{ form.username.errors }}
+                <label for="{{ form.full_name.id_for_label }}">Full Name</label>
+                {{ form.full_name }}
+                {{ form.full_name.errors }}
+            </div>
+
+            <div class="auth-field">
+                <label for="{{ form.email.id_for_label }}">Email Address</label>
+                {{ form.email }}
+                {{ form.email.errors }}
             </div>
 
             <div class="auth-field">

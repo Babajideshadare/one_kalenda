@@ -3,10 +3,10 @@ from datetime import date, datetime
 
 from django.contrib.auth import login
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth.forms import UserCreationForm
 from django.shortcuts import render, redirect, get_object_or_404
 
 from .models import CalendarEntry, CalendarDay
+from .forms import RegisterForm
 
 
 @login_required
@@ -135,20 +135,17 @@ def home(request):
         row = []
         for d in w:
             classes = ['day']
-            # Month membership / selection / today
             if d.month != display_month:
                 classes.append('muted')
             elif d == selected_date:
                 classes.append('selected')
             elif d == today:
                 classes.append('today')
-            # Status ring
             status = status_map.get(d, 'none')
             if status == 'done':
                 classes.append('day-done')
             elif status == 'cancel':
                 classes.append('day-cancel')
-
             row.append({'date': d, 'classes': ' '.join(classes)})
         weeks.append(row)
 
@@ -192,7 +189,7 @@ def create_calendar_entry(request):
     new_entry = CalendarEntry.objects.create(
         name=default_name,
         order=count,
-        user=None,   # will be set to request.user in next phase
+        user=None,   # will be tied to request.user in a later step
     )
 
     return redirect(f"/?entry_id={new_entry.id}")
@@ -219,16 +216,16 @@ def rename_calendar_entry(request, pk):
 
 def register(request):
     """
-    Simple registration view using Django's UserCreationForm.
-    On successful registration, logs the user in and redirects to home.
+    Registration using custom RegisterForm (full name, email, password).
+    On success, logs the user in and redirects to home.
     """
     if request.method == 'POST':
-        form = UserCreationForm(request.POST)
+        form = RegisterForm(request.POST)
         if form.is_valid():
             user = form.save()
             login(request, user)
             return redirect('home')
     else:
-        form = UserCreationForm()
+        form = RegisterForm()
 
     return render(request, 'registration/register.html', {'form': form})
