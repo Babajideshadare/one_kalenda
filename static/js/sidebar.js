@@ -1,5 +1,5 @@
 // Sidebar collapse + Calendar View entries collapse with remembered state
-// + redirect to rename page on double/right click of entry name pill
+// + redirect to rename page on double/right click of tabs and sidebar entries
 document.addEventListener('DOMContentLoaded', function () {
     const sidebar = document.getElementById('sidebar');
     const toggleButton = document.getElementById('sidebarToggle');
@@ -40,25 +40,29 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
-    // --- Rename via double-click / right-click on entry name pill ---
-    const entryNameDisplay = document.getElementById('entryNameDisplay');
-    if (entryNameDisplay) {
-        const entryId = entryNameDisplay.dataset.entryId;
-        if (entryId) {
-            const goToRename = function () {
-                window.location.href = `/entries/${entryId}/rename/`;
-            };
+    // --- Rename on double/right click (tabs + sidebar entries) ---
+    const renameTargets = document.querySelectorAll(
+        '.tab-item[data-entry-id], .sidebar-entry[data-entry-id]'
+    );
 
-            // Double-click
-            entryNameDisplay.addEventListener('dblclick', function () {
-                goToRename();
-            });
+    renameTargets.forEach(function (el) {
+        const entryId = el.dataset.entryId;
+        if (!entryId) return;
 
-            // Right-click (context menu)
-            entryNameDisplay.addEventListener('contextmenu', function (event) {
-                event.preventDefault(); // prevent default context menu
-                goToRename();
-            });
-        }
-    }
+        const goToRename = function () {
+            window.location.href = `/entries/${entryId}/rename/`;
+        };
+
+        // Double-click
+        el.addEventListener('dblclick', function (event) {
+            event.preventDefault();
+            goToRename();
+        });
+
+        // Right-click
+        el.addEventListener('contextmenu', function (event) {
+            event.preventDefault();
+            goToRename();
+        });
+    });
 });

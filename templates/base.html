@@ -56,6 +56,7 @@
                         <a
                             href="/?entry_id={{ entry.id }}"
                             class="sidebar-entry {% if entry == active_entry %}active{% endif %}"
+                            data-entry-id="{{ entry.id }}"
                         >
                             {{ entry.name }}
                         </a>
@@ -78,18 +79,21 @@
 
         <!-- Main content area -->
         <main class="content-wrapper">
-            <!-- Small bar above calendar: active entry name + + -->
-            <div class="entry-bar">
-                {% if active_entry %}
-                    <div
-                        class="entry-bar-name"
-                        id="entryNameDisplay"
-                        data-entry-id="{{ active_entry.id }}"
+            <!-- Horizontal tab bar for CalendarEntry -->
+            <div class="tab-bar">
+                {% for entry in entries %}
+                    <a
+                        href="/?entry_id={{ entry.id }}"
+                        class="tab-item {% if entry == active_entry %}active{% endif %}"
+                        data-entry-id="{{ entry.id }}"
                     >
-                        {{ active_entry.name }}
-                    </div>
-                    <a href="{% url 'create_calendar_entry' %}" class="entry-bar-add">+</a>
-                {% endif %}
+                        {{ entry.name }}
+                    </a>
+                {% empty %}
+                    <!-- no named tabs when there are no entries -->
+                {% endfor %}
+                <!-- '+' tab to create new entry -->
+                <a href="{% url 'create_calendar_entry' %}" class="tab-item tab-add">+</a>
             </div>
 
             <!-- Page content -->

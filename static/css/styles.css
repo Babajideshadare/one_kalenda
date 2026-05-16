@@ -206,8 +206,8 @@ body {
     flex-direction: column;
 }
 
-/* Small bar above calendar: active entry name + + */
-.entry-bar {
+/* Horizontal tab bar */
+.tab-bar {
     display: flex;
     align-items: center;
     padding: 12px 32px 0 32px;
@@ -215,28 +215,27 @@ body {
     background-color: #efefef;
 }
 
-.entry-bar-name {
+/* Tabs (CalendarEntry names) */
+.tab-item {
     padding: 8px 16px;
-    border-radius: 6px;
+    border-radius: 6px 6px 0 0;
     border: 0.5px solid rgba(0, 0, 0, 0.05); /* 000000, 5%, 0.5px */
-    background-color: rgba(59, 91, 219, 0.15); /* 3b5bdb, 15% */
+    background-color: #ffffff;
     font-size: 14px;
     color: #000000;
     cursor: pointer;
+    text-decoration: none;
 }
 
-.entry-bar-add {
-    width: 32px;
-    height: 32px;
-    border-radius: 6px;
-    border: 0.5px solid rgba(0, 0, 0, 0.05);
-    background-color: #ffffff;
-    color: #000000;
-    font-size: 18px;
+/* Active tab: 3b5bdb, 15% */
+.tab-item.active {
+    background-color: rgba(59, 91, 219, 0.15); /* Tab selector: 3b5bdb, 15% */
+}
+
+/* '+' tab */
+.tab-item.tab-add {
+    width: 36px;
     text-align: center;
-    text-decoration: none;
-    line-height: 30px;
-    cursor: pointer;
 }
 
 /* Page content (where home.html goes) */
@@ -432,19 +431,17 @@ body {
 }
 
 /* =================== */
-/* Rename modal styles */
+/* Rename page layout */
 /* =================== */
 
-.modal-overlay {
-    position: fixed;
-    inset: 0;
-    background-color: rgba(0, 0, 0, 0.15); /* 000000, 15% */
+.rename-page {
+    width: 100%;
     display: flex;
     align-items: center;
     justify-content: center;
-    z-index: 1000;
 }
 
+/* Modal-style card reused on rename page */
 .modal-card {
     width: 360px;
     max-width: 90%;
@@ -507,11 +504,4 @@ body {
     background-color: #4fc192;
     color: #ffffff;
     border: none;
-}
-
-.rename-page {
-    width: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
 }
