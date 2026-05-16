@@ -368,13 +368,13 @@ body {
     border: 1px solid rgba(59, 91, 219, 0.3);
 }
 
-/* Status styles */
+/* Status styles (subtle rings) */
 .day-done {
-    box-shadow: 0 0 0 2px #4fc192;
+    box-shadow: 0 0 0 1px rgba(79, 193, 146, 0.5);   /* softer green */
 }
 
 .day-cancel {
-    box-shadow: 0 0 0 2px #ff6b6b;
+    box-shadow: 0 0 0 1px rgba(255, 107, 107, 0.3);
 }
 
 /* Notes card */
