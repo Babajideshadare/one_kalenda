@@ -23,7 +23,9 @@ def home(request):
     Daily notes:
       - Saved per (entry, selected_date).
     """
-    entries = CalendarEntry.objects.all().order_by('order', 'id')
+
+    # Only this user's entries
+    entries = CalendarEntry.objects.filter(user=request.user).order_by('order', 'id')
     active_entry = entries.first() if entries else None
 
     # 1) Determine active entry
@@ -32,7 +34,7 @@ def home(request):
         try:
             active_entry = entries.get(id=entry_id)
         except CalendarEntry.DoesNotExist:
-            pass
+            active_entry = entries.first() if entries else None
 
     today = date.today()
 
@@ -172,12 +174,10 @@ def home(request):
 @login_required
 def create_calendar_entry(request):
     """
-    Create a new CalendarEntry (tab) with a default name like 'Tab 1', 'Tab 2', ...
-    Limit to a maximum of 10 entries. After creation, redirect back to home and
-    make the new entry active.
+    Create a new CalendarEntry for the current user.
     """
     MAX_ENTRIES = 10
-    entries = CalendarEntry.objects.all().order_by('order', 'id')
+    entries = CalendarEntry.objects.filter(user=request.user).order_by('order', 'id')
     count = entries.count()
 
     if count >= MAX_ENTRIES:
@@ -189,7 +189,7 @@ def create_calendar_entry(request):
     new_entry = CalendarEntry.objects.create(
         name=default_name,
         order=count,
-        user=None,   # will be tied to request.user in a later step
+        user=request.user,
     )
 
     return redirect(f"/?entry_id={new_entry.id}")
@@ -198,11 +198,9 @@ def create_calendar_entry(request):
 @login_required
 def rename_calendar_entry(request, pk):
     """
-    Separate page to rename a CalendarEntry.
-    GET: show form with current name.
-    POST: save new name and redirect back to home with this entry active.
+    Rename a CalendarEntry that belongs to the current user.
     """
-    entry = get_object_or_404(CalendarEntry, pk=pk)
+    entry = get_object_or_404(CalendarEntry, pk=pk, user=request.user)
 
     if request.method == 'POST':
         new_name = (request.POST.get('name') or '').strip()
@@ -229,3 +227,12 @@ def register(request):
         form = RegisterForm()
 
     return render(request, 'registration/register.html', {'form': form})
+
+
+@login_required
+def profile(request):
+    """
+    Simple profile page showing user's name and email,
+    with a logout button.
+    """
+    return render(request, 'habits/profile.html')
