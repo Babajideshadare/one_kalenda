@@ -2,6 +2,7 @@ import calendar
 from datetime import date, datetime
 
 from django.contrib.auth import login, update_session_auth_hash
+from django.contrib.auth import logout as auth_logout
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect, get_object_or_404
 
@@ -227,6 +228,14 @@ def register(request):
         form = RegisterForm()
 
     return render(request, 'registration/register.html', {'form': form})
+
+
+def logout_view(request):
+    """
+    Log the user out and redirect to the login page.
+    """
+    auth_logout(request)
+    return redirect('login')
 
 
 @login_required
