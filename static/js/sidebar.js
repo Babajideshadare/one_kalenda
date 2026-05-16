@@ -1,4 +1,5 @@
 // Sidebar collapse + Calendar View entries collapse with remembered state
+// + redirect to rename page on double/right click of entry name pill
 document.addEventListener('DOMContentLoaded', function () {
     const sidebar = document.getElementById('sidebar');
     const toggleButton = document.getElementById('sidebarToggle');
@@ -27,7 +28,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // --- Restore and toggle collapsed state for nested CalendarEntry list ---
     if (entriesList && entriesToggle) {
-        // Restore state on load from localStorage
         const isCollapsed = localStorage.getItem(STORAGE_KEY) === 'true';
         if (isCollapsed) {
             entriesList.classList.add('collapsed');
@@ -38,5 +38,27 @@ document.addEventListener('DOMContentLoaded', function () {
             const nowCollapsed = entriesList.classList.contains('collapsed');
             localStorage.setItem(STORAGE_KEY, nowCollapsed.toString());
         });
+    }
+
+    // --- Rename via double-click / right-click on entry name pill ---
+    const entryNameDisplay = document.getElementById('entryNameDisplay');
+    if (entryNameDisplay) {
+        const entryId = entryNameDisplay.dataset.entryId;
+        if (entryId) {
+            const goToRename = function () {
+                window.location.href = `/entries/${entryId}/rename/`;
+            };
+
+            // Double-click
+            entryNameDisplay.addEventListener('dblclick', function () {
+                goToRename();
+            });
+
+            // Right-click (context menu)
+            entryNameDisplay.addEventListener('contextmenu', function (event) {
+                event.preventDefault(); // prevent default context menu
+                goToRename();
+            });
+        }
     }
 });

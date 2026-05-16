@@ -1,15 +1,15 @@
 from datetime import date
 
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from .models import CalendarEntry, CalendarDay
 
 
 def home(request):
     """
-    Home page: show layout, entries as tabs, and for an active entry
+    Home page: show layout, entries in sidebar, and for an active entry
     show a calendar + Daily Notes for a single date (today for now).
 
-    POST: save notes for the active entry + selected date.
+    POST from notes form: save notes for the active entry + selected date.
     GET: display current notes.
     """
     entries = CalendarEntry.objects.all().order_by('order', 'id')
@@ -28,8 +28,8 @@ def home(request):
     day = None
 
     if active_entry:
-        # Handle saving notes (POST)
-        if request.method == 'POST':
+        # Handle saving notes (POST) from the notes form
+        if request.method == 'POST' and 'notes' in request.POST:
             notes = request.POST.get('notes', '')
             day, _created = CalendarDay.objects.get_or_create(
                 entry=active_entry,
@@ -78,3 +78,22 @@ def create_calendar_entry(request):
     )
 
     return redirect(f"/?entry_id={new_entry.id}")
+
+
+def rename_calendar_entry(request, pk):
+    """
+    Separate page to rename a CalendarEntry.
+    GET: show form with current name.
+    POST: save new name and redirect back to home with this entry active.
+    """
+    entry = get_object_or_404(CalendarEntry, pk=pk)
+
+    if request.method == 'POST':
+        new_name = (request.POST.get('name') or '').strip()
+        if new_name:
+            entry.name = new_name[:100]
+            entry.save()
+        return redirect(f"/?entry_id={entry.id}")
+
+    # GET: show rename form
+    return render(request, 'habits/rename_entry.html', {'entry': entry})

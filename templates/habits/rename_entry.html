@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="rename-page">
+    <div class="modal-card">
+        <form method="post" class="modal-form">
+            {% csrf_token %}
+            <div class="modal-header">
+                Rename Calendar Entry
+            </div>
+            <div class="modal-body">
+                <input
+                    type="text"
+                    name="name"
+                    class="modal-input"
+                    value="{{ entry.name }}"
+                >
+            </div>
+            <div class="modal-footer">
+                <a href="/?entry_id={{ entry.id }}" class="modal-btn modal-btn-no">
+                    Cancel
+                </a>
+                <button type="submit" class="modal-btn modal-btn-yes">
+                    Yes
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

@@ -78,10 +78,14 @@
 
         <!-- Main content area -->
         <main class="content-wrapper">
-            <!-- Small bar showing only active entry name + + -->
+            <!-- Small bar above calendar: active entry name + + -->
             <div class="entry-bar">
                 {% if active_entry %}
-                    <div class="entry-bar-name">
+                    <div
+                        class="entry-bar-name"
+                        id="entryNameDisplay"
+                        data-entry-id="{{ active_entry.id }}"
+                    >
                         {{ active_entry.name }}
                     </div>
                     <a href="{% url 'create_calendar_entry' %}" class="entry-bar-add">+</a>
