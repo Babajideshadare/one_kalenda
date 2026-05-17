@@ -935,3 +935,51 @@ body {
     font-size: 14px;
     color: #777777;
 }
+
+/* Highlight active sidebar item (Comments) */
+.sidebar-item-active {
+    background-color: rgba(203, 238, 243, 0.47); /* same as .sidebar-entry.active */
+}
+
+/* Comment list actions and edit page */
+.comment-actions {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+
+.comment-action-link {
+    font-size: 12px;
+    color: #3b5bdb;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.comment-action-link:hover {
+    text-decoration: underline;
+}
+
+.comment-action-danger {
+    color: #d9534f;
+}
+
+.comments-edit-actions {
+    margin-top: 8px;
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+}
+
+.comments-cancel-link {
+    font-size: 14px;
+    color: #555555;
+    text-decoration: none;
+    padding: 6px 12px;
+    border-radius: 6px;
+    border: 1px solid #e0e0e0;
+    background-color: #f5f5f5;
+}
+
+.comments-cancel-link:hover {
+    background-color: #eaeaea;
+}

@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="profile-container">
+    <div class="profile-card">
+        <div class="comments-header-row">
+            <h2>Edit Comment</h2>
+        </div>
+
+        <form method="post" class="comments-form">
+            {% csrf_token %}
+            {{ form.non_field_errors }}
+
+            <div class="comments-field">
+                {{ form.text }}
+                {% if form.text.errors %}
+                    <div class="field-error">{{ form.text.errors.0 }}</div>
+                {% endif %}
+            </div>
+
+            <div class="comments-edit-actions">
+                <a href="{% url 'public_comments' %}" class="comments-cancel-link">
+                    Cancel
+                </a>
+                <button type="submit" class="comments-submit-btn">
+                    Save
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

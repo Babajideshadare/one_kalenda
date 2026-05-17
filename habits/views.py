@@ -262,6 +262,57 @@ def public_comments(request):
     return render(request, 'habits/public_comments.html', context)
 
 
+@login_required
+def edit_public_comment(request, pk):
+    """
+    Edit a public comment. Only the author can edit.
+    """
+    comment = get_object_or_404(PublicComment, pk=pk, user=request.user)
+
+    # Sidebar + tabs context
+    entries = CalendarEntry.objects.filter(user=request.user).order_by('order', 'id')
+    active_entry = entries.first() if entries else None
+
+    if request.method == 'POST':
+        form = PublicCommentForm(request.POST, instance=comment)
+        if form.is_valid():
+            form.save()
+            return redirect('public_comments')
+    else:
+        form = PublicCommentForm(instance=comment)
+
+    context = {
+        'entries': entries,
+        'active_entry': active_entry,
+        'form': form,
+        'comment': comment,
+    }
+    return render(request, 'habits/edit_comment.html', context)
+
+
+@login_required
+def delete_public_comment(request, pk):
+    """
+    Delete a public comment. Only the author can delete.
+    """
+    comment = get_object_or_404(PublicComment, pk=pk, user=request.user)
+
+    # Sidebar + tabs context
+    entries = CalendarEntry.objects.filter(user=request.user).order_by('order', 'id')
+    active_entry = entries.first() if entries else None
+
+    if request.method == 'POST':
+        comment.delete()
+        return redirect('public_comments')
+
+    context = {
+        'entries': entries,
+        'active_entry': active_entry,
+        'comment': comment,
+    }
+    return render(request, 'habits/delete_comment.html', context)
+
+
 def register(request):
     """
     Registration using custom RegisterForm (full name, email, password).

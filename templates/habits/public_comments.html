@@ -25,19 +25,39 @@
             {% for comment in comments %}
                 <div class="comment-item">
                     <div class="comment-header">
-                        <span class="comment-author">
-                            {% if comment.user.last_name %}
-                                {{ comment.user.last_name }}
-                            {% elif comment.user.first_name %}
-                                {{ comment.user.first_name }}
-                            {% else %}
-                                {{ comment.user.username }}
-                            {% endif %}
-                        </span>
-                        <span class="comment-date">
-                            {{ comment.created_at|date:"M j, Y H:i" }}
-                        </span>
+                        <div>
+                            <span class="comment-author">
+                                {% if comment.user.last_name %}
+                                    {{ comment.user.last_name }}
+                                {% elif comment.user.first_name %}
+                                    {{ comment.user.first_name }}
+                                {% else %}
+                                    {{ comment.user.username }}
+                                {% endif %}
+                            </span>
+                            <span class="comment-date">
+                                {{ comment.created_at|date:"M j, Y H:i" }}
+                            </span>
+                        </div>
+
+                        {% if comment.user_id == request.user.id %}
+                            <div class="comment-actions">
+                                <a
+                                    href="{% url 'edit_public_comment' comment.id %}"
+                                    class="comment-action-link"
+                                >
+                                    Edit
+                                </a>
+                                <a
+                                    href="{% url 'delete_public_comment' comment.id %}"
+                                    class="comment-action-link comment-action-danger"
+                                >
+                                    Delete
+                                </a>
+                            </div>
+                        {% endif %}
                     </div>
+
                     <div class="comment-text">
                         {{ comment.text|linebreaksbr }}
                     </div>

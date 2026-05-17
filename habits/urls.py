@@ -17,6 +17,8 @@ urlpatterns = [
 
     # Public comments
     path('comments/', views.public_comments, name='public_comments'),
+    path('comments/<int:pk>/edit/', views.edit_public_comment, name='edit_public_comment'),
+    path('comments/<int:pk>/delete/', views.delete_public_comment, name='delete_public_comment'),
 
     # Calendar entries
     path('entries/create/', views.create_calendar_entry, name='create_calendar_entry'),
