@@ -109,6 +109,16 @@
     </div>
 </div>
 
+<!-- Custom context menu for tabs/sidebar entries -->
+<div id="entryContextMenu" class="context-menu hidden">
+    <button type="button" class="context-menu-item" data-action="rename">
+        Rename
+    </button>
+    <button type="button" class="context-menu-item context-menu-item-danger" data-action="delete">
+        Delete
+    </button>
+</div>
+
 <script src="{% static 'js/sidebar.js' %}"></script>
 </body>
 </html>

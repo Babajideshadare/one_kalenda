@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="rename-page">
+    <div class="modal-card">
+        <form method="post" class="modal-form">
+            {% csrf_token %}
+            <div class="modal-header">
+                Delete Tab
+            </div>
+
+            <div class="modal-body">
+                <div class="modal-title">
+                    Delete "{{ entry.name }}"?
+                </div>
+                <div class="modal-subtitle">
+                    This will remove this tab and its notes. This can’t be undone.
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <a href="/?entry_id={{ entry.id }}" class="modal-btn modal-btn-no">
+                    Cancel
+                </a>
+                <button type="submit" class="modal-btn modal-btn-danger">
+                    Delete
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

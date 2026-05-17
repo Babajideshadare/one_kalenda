@@ -215,6 +215,23 @@ def rename_calendar_entry(request, pk):
     return render(request, 'habits/rename_entry.html', {'entry': entry})
 
 
+@login_required
+def delete_calendar_entry(request, pk):
+    """
+    Confirm and delete a CalendarEntry that belongs to the current user.
+    Also deletes all related CalendarDay objects (via CASCADE).
+    """
+    entry = get_object_or_404(CalendarEntry, pk=pk, user=request.user)
+
+    if request.method == 'POST':
+        entry.delete()
+        # After deleting, just go home; home() will pick a new active_entry or show empty state
+        return redirect('home')
+
+    # GET: show confirmation page (Yes / No)
+    return render(request, 'habits/delete_entry.html', {'entry': entry})
+
+
 def register(request):
     """
     Registration using custom RegisterForm (full name, email, password).
