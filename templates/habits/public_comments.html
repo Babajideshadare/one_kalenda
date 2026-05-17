@@ -42,17 +42,22 @@
 
                         {% if comment.user_id == request.user.id %}
                             <div class="comment-actions">
+                                <!-- Edit icon button -->
                                 <a
                                     href="{% url 'edit_public_comment' comment.id %}"
-                                    class="comment-action-link"
+                                    class="comment-icon-button"
+                                    title="Edit"
                                 >
-                                    Edit
+                                    &#9998;  {# pencil icon #}
                                 </a>
+
+                                <!-- Delete icon button -->
                                 <a
                                     href="{% url 'delete_public_comment' comment.id %}"
-                                    class="comment-action-link comment-action-danger"
+                                    class="comment-icon-button comment-icon-danger"
+                                    title="Delete"
                                 >
-                                    Delete
+                                    &#128465;  {# trash icon #}
                                 </a>
                             </div>
                         {% endif %}
