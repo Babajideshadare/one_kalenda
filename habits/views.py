@@ -236,6 +236,7 @@ def delete_calendar_entry(request, pk):
 def public_comments(request):
     """
     Shared public comments page visible to all logged-in users.
+    Sidebar + tabs should still work here.
     """
     # Sidebar + tabs context
     entries = CalendarEntry.objects.filter(user=request.user).order_by('order', 'id')
@@ -266,6 +267,7 @@ def public_comments(request):
 def edit_public_comment(request, pk):
     """
     Edit a public comment. Only the author can edit.
+    Sidebar + tabs should still work here.
     """
     comment = get_object_or_404(PublicComment, pk=pk, user=request.user)
 
@@ -294,6 +296,7 @@ def edit_public_comment(request, pk):
 def delete_public_comment(request, pk):
     """
     Delete a public comment. Only the author can delete.
+    Sidebar + tabs should still work here.
     """
     comment = get_object_or_404(PublicComment, pk=pk, user=request.user)
 
