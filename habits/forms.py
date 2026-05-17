@@ -121,7 +121,7 @@ class EditProfileForm(forms.Form):
 
 class PublicCommentForm(forms.ModelForm):
     """
-    Form for posting a public comment.
+    Form for posting a public comment, limited to 2500 words.
     """
     class Meta:
         model = PublicComment
@@ -130,6 +130,16 @@ class PublicCommentForm(forms.ModelForm):
             'text': forms.Textarea(attrs={
                 'rows': 3,
                 'class': 'comments-textarea',
-                'placeholder': 'Write a comment…',
+                'placeholder': 'Write a comment (max 2500 words)…',
             }),
         }
+
+    def clean_text(self):
+        text = self.cleaned_data.get('text', '') or ''
+        # Count words by splitting on whitespace
+        word_count = len(text.split())
+        if word_count > 2500:
+            raise forms.ValidationError(
+                "Comments can't be longer than 2500 words."
+            )
+        return text

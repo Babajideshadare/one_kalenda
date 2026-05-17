@@ -1,6 +1,7 @@
 import calendar
 from datetime import date, datetime
 
+from django.contrib import messages
 from django.contrib.auth import login, update_session_auth_hash
 from django.contrib.auth import logout as auth_logout
 from django.contrib.auth.decorators import login_required
@@ -15,17 +16,7 @@ from .forms import RegisterForm, EditProfileForm, PublicCommentForm
 def home(request):
     """
     Home page: layout + sidebar + tabs.
-
-    Calendar:
-      - Shows real month for selected_date.
-      - Click day:
-          * If it's a different date -> only select it (no status change).
-          * If it's the same selected date -> cycle status: none -> done -> cancel -> none.
-      - '<' and '>' move to previous/next month (selected_date = first day of that month).
-    Daily notes:
-      - Saved per (entry, selected_date).
     """
-
     # Only this user's entries
     entries = CalendarEntry.objects.filter(user=request.user).order_by('order', 'id')
     active_entry = entries.first() if entries else None
@@ -38,10 +29,10 @@ def home(request):
         except CalendarEntry.DoesNotExist:
             active_entry = entries.first() if entries else None
 
-    # Use local date in your configured TIME_ZONE (e.g. Africa/Lagos)
+    # Use local date in your configured TIME_ZONE
     today = timezone.localdate()
 
-    # 2) Determine selected date from GET only (keeps previous selection)
+    # 2) Determine selected date
     selected_date = today
     date_str = request.GET.get('date')
     if date_str:
@@ -57,18 +48,15 @@ def home(request):
         action = request.POST.get('action')
 
         if action == 'click_day':
-            # Date that was clicked
             clicked_str = request.POST.get('date')
             try:
                 clicked_date = datetime.strptime(clicked_str, '%Y-%m-%d').date()
             except (TypeError, ValueError):
                 clicked_date = selected_date
 
-            # If it's a different date, just select it (no status change)
             if clicked_date != selected_date:
                 return redirect(f"/?entry_id={active_entry.id}&date={clicked_date.isoformat()}")
 
-            # If it's the same as selected_date, cycle status
             day_obj, _created = CalendarDay.objects.get_or_create(
                 entry=active_entry,
                 date=selected_date,
@@ -77,13 +65,12 @@ def home(request):
                 day_obj.status = 'done'
             elif day_obj.status == 'done':
                 day_obj.status = 'cancel'
-            else:  # 'cancel' or anything else
+            else:
                 day_obj.status = 'none'
             day_obj.save()
 
             return redirect(f"/?entry_id={active_entry.id}&date={selected_date.isoformat()}")
 
-        # Saving notes for selected_date
         if 'notes' in request.POST:
             target_str = request.POST.get('date')
             try:
@@ -100,10 +87,9 @@ def home(request):
 
             return redirect(f"/?entry_id={active_entry.id}&date={target_date.isoformat()}")
 
-    # 4) Compute prev/next month dates for navigation
+    # 4) Prev/next month dates
     first_of_month = selected_date.replace(day=1)
 
-    # Previous month (first day)
     if first_of_month.month == 1:
         prev_month_year = first_of_month.year - 1
         prev_month = 12
@@ -112,7 +98,6 @@ def home(request):
         prev_month = first_of_month.month - 1
     prev_month_date = date(prev_month_year, prev_month, 1)
 
-    # Next month (first day)
     if first_of_month.month == 12:
         next_month_year = first_of_month.year + 1
         next_month = 1
@@ -121,10 +106,10 @@ def home(request):
         next_month = first_of_month.month + 1
     next_month_date = date(next_month_year, next_month, 1)
 
-    # 5) Compute calendar weeks and attach classes based on status/selection
+    # 5) Calendar weeks + classes
     display_year = selected_date.year
     display_month = selected_date.month
-    cal = calendar.Calendar(firstweekday=6)  # Sunday first
+    cal = calendar.Calendar(firstweekday=6)
     weeks_raw = cal.monthdatescalendar(display_year, display_month)
     month_label = selected_date.strftime('%B %Y').upper()
 
@@ -136,6 +121,7 @@ def home(request):
     else:
         status_map = {}
 
+    today = timezone.localdate()
     for w in weeks_raw:
         row = []
         for d in w:
@@ -154,7 +140,6 @@ def home(request):
             row.append({'date': d, 'classes': ' '.join(classes)})
         weeks.append(row)
 
-    # 6) Day object for notes textarea
     if active_entry and day_obj is None:
         day_obj = CalendarDay.objects.filter(entry=active_entry, date=selected_date).first()
 
@@ -176,9 +161,6 @@ def home(request):
 
 @login_required
 def create_calendar_entry(request):
-    """
-    Create a new CalendarEntry for the current user.
-    """
     MAX_ENTRIES = 10
     entries = CalendarEntry.objects.filter(user=request.user).order_by('order', 'id')
     count = entries.count()
@@ -200,9 +182,6 @@ def create_calendar_entry(request):
 
 @login_required
 def rename_calendar_entry(request, pk):
-    """
-    Rename a CalendarEntry that belongs to the current user.
-    """
     entry = get_object_or_404(CalendarEntry, pk=pk, user=request.user)
 
     if request.method == 'POST':
@@ -217,18 +196,12 @@ def rename_calendar_entry(request, pk):
 
 @login_required
 def delete_calendar_entry(request, pk):
-    """
-    Confirm and delete a CalendarEntry that belongs to the current user.
-    Also deletes all related CalendarDay objects (via CASCADE).
-    """
     entry = get_object_or_404(CalendarEntry, pk=pk, user=request.user)
 
     if request.method == 'POST':
         entry.delete()
-        # After deleting, just go home; home() will pick a new active_entry or show empty state
         return redirect('home')
 
-    # GET: show confirmation page (Yes / No)
     return render(request, 'habits/delete_entry.html', {'entry': entry})
 
 
@@ -236,9 +209,7 @@ def delete_calendar_entry(request, pk):
 def public_comments(request):
     """
     Shared public comments page visible to all logged-in users.
-    Sidebar + tabs should still work here.
     """
-    # Sidebar + tabs context
     entries = CalendarEntry.objects.filter(user=request.user).order_by('order', 'id')
     active_entry = entries.first() if entries else None
 
@@ -264,14 +235,44 @@ def public_comments(request):
 
 
 @login_required
+def pin_public_comment(request, pk):
+    """
+    Pin or unpin a public comment.
+
+    - If action=pin and fewer than 5 comments are pinned, pin it.
+    - If action=unpin, unpin it.
+    - Limit: max 5 pinned comments in total.
+    """
+    comment = get_object_or_404(PublicComment, pk=pk)
+
+    if request.method == 'POST':
+        action = request.POST.get('action')
+
+        if action == 'pin':
+            if not comment.is_pinned:
+                pinned_count = PublicComment.objects.filter(is_pinned=True).count()
+                if pinned_count >= 5:
+                    messages.error(request, "You can only pin up to 5 comments.")
+                else:
+                    comment.is_pinned = True
+                    comment.pinned_at = timezone.now()
+                    comment.save()
+        elif action == 'unpin':
+            if comment.is_pinned:
+                comment.is_pinned = False
+                comment.pinned_at = None
+                comment.save()
+
+    return redirect('public_comments')
+
+
+@login_required
 def edit_public_comment(request, pk):
     """
     Edit a public comment. Only the author can edit.
-    Sidebar + tabs should still work here.
     """
     comment = get_object_or_404(PublicComment, pk=pk, user=request.user)
 
-    # Sidebar + tabs context
     entries = CalendarEntry.objects.filter(user=request.user).order_by('order', 'id')
     active_entry = entries.first() if entries else None
 
@@ -296,11 +297,9 @@ def edit_public_comment(request, pk):
 def delete_public_comment(request, pk):
     """
     Delete a public comment. Only the author can delete.
-    Sidebar + tabs should still work here.
     """
     comment = get_object_or_404(PublicComment, pk=pk, user=request.user)
 
-    # Sidebar + tabs context
     entries = CalendarEntry.objects.filter(user=request.user).order_by('order', 'id')
     active_entry = entries.first() if entries else None
 
@@ -317,10 +316,6 @@ def delete_public_comment(request, pk):
 
 
 def register(request):
-    """
-    Registration using custom RegisterForm (full name, email, password).
-    On success, logs the user in and redirects to home.
-    """
     if request.method == 'POST':
         form = RegisterForm(request.POST)
         if form.is_valid():
@@ -334,24 +329,15 @@ def register(request):
 
 
 def logout_view(request):
-    """
-    Log the user out and redirect to the login page.
-    """
     auth_logout(request)
     return redirect('login')
 
 
 @login_required
 def profile(request):
-    """
-    Read-only profile page showing basic user info + avatar + Edit Profile button.
-    Also passes entries/active_entry so sidebar + tab bar work.
-    """
-    # Sidebar + tabs context
     entries = CalendarEntry.objects.filter(user=request.user).order_by('order', 'id')
     active_entry = entries.first() if entries else None
 
-    # Avatar
     avatar_url = None
     try:
         profile_obj = request.user.profile
@@ -370,15 +356,9 @@ def profile(request):
 
 @login_required
 def edit_profile(request):
-    """
-    Edit profile details (full name, username), change password, and upload avatar.
-    Also passes entries/active_entry so sidebar + tab bar work.
-    """
-    # Sidebar + tabs context
     entries = CalendarEntry.objects.filter(user=request.user).order_by('order', 'id')
     active_entry = entries.first() if entries else None
 
-    # Current avatar
     avatar_url = None
     try:
         profile_obj = request.user.profile
@@ -391,7 +371,6 @@ def edit_profile(request):
         form = EditProfileForm(request.POST, request.FILES, user=request.user)
         if form.is_valid():
             user = form.save()
-            # If password was changed, keep the user logged in
             if form.cleaned_data.get('new_password1'):
                 update_session_auth_hash(request, user)
             return redirect('profile')

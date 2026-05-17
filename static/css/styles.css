@@ -115,7 +115,7 @@ body {
     transition: width 0.4s ease-in-out, padding 0.4s ease-in-out, opacity 0.4s ease-in-out;
     overflow: hidden;
 
-    /* NEW: make sidebar a vertical flex container so footer can sit at bottom */
+    /* make sidebar a vertical flex container so footer can sit at bottom */
     display: flex;
     flex-direction: column;
 }
@@ -130,7 +130,7 @@ body {
     padding: 12px 20px;
     border-top: 0.5px solid rgba(0, 0, 0, 0.15);
 
-    /* NEW: push footer to bottom of the flex column */
+    /* push footer to bottom of the flex column */
     margin-top: auto;
 }
 
@@ -194,6 +194,11 @@ body {
 
 .sidebar-entry.active {
     background-color: rgba(203, 238, 243, 0.47); /* cbeef3, 47% */
+}
+
+/* generic active state for sidebar items (e.g. Comments) */
+.sidebar-item-active {
+    background-color: rgba(203, 238, 243, 0.47);
 }
 
 .sidebar-entries.collapsed {
@@ -552,6 +557,29 @@ body {
     border: none;
 }
 
+/* Modal title/subtitle and danger button */
+.modal-title {
+    font-size: 16px;
+    font-weight: 500;
+    margin-bottom: 4px;
+}
+
+.modal-subtitle {
+    font-size: 13px;
+    color: #777777;
+    line-height: 1.4;
+}
+
+.modal-btn-danger {
+    background-color: #d9534f;
+    color: #ffffff;
+    border: none;
+}
+
+.modal-btn-danger:hover {
+    background-color: #c74745;
+}
+
 /* Auth forms */
 
 .auth-container {
@@ -828,30 +856,6 @@ body {
     color: #d9534f;
 }
 
-/* Delete modal text refinements */
-.modal-title {
-    font-size: 16px;
-    font-weight: 500;
-    margin-bottom: 4px;
-}
-
-.modal-subtitle {
-    font-size: 13px;
-    color: #777777;
-    line-height: 1.4;
-}
-
-/* Red "Delete" button style */
-.modal-btn-danger {
-    background-color: #d9534f;
-    color: #ffffff;
-    border: none;
-}
-
-.modal-btn-danger:hover {
-    background-color: #c74745;
-}
-
 /* Comments page (reuses profile-container/profile-card) */
 .comments-header-row {
     display: flex;
@@ -874,9 +878,15 @@ body {
     padding: 8px 10px;
     border-radius: 6px;
     border: 1px solid #e0e0e0;
-    font-size: 14px;
+    font-size: 14px;          /* normal text size */
     resize: vertical;
     font-family: inherit;
+}
+
+/* Smaller, light-grey placeholder, consistent with UI */
+.comments-textarea::placeholder {
+    font-size: 12px;
+    color: #b3b3b3;
 }
 
 .comments-submit-btn {
@@ -922,9 +932,11 @@ body {
 .comment-date {
     font-size: 12px;
     color: #888888;
+    margin-left: 8px;
 }
 
 .comment-text {
+    margin-top: 4px;
     font-size: 14px;
     color: #000000;
     white-space: pre-wrap;
@@ -936,46 +948,14 @@ body {
     color: #777777;
 }
 
-/* Highlight active sidebar item (Comments) */
-.sidebar-item-active {
-    background-color: rgba(203, 238, 243, 0.47); /* same as .sidebar-entry.active */
-}
-
-/* Comment list actions and edit page */
-.comment-actions {
-    display: flex;
-    gap: 8px;
-    align-items: center;
-}
-
-.comments-edit-actions {
-    margin-top: 8px;
-    display: flex;
-    justify-content: flex-end;
-    gap: 8px;
-}
-
-.comments-cancel-link {
-    font-size: 14px;
-    color: #555555;
-    text-decoration: none;
-    padding: 6px 12px;
-    border-radius: 6px;
-    border: 1px solid #e0e0e0;
-    background-color: #f5f5f5;
-}
-
-.comments-cancel-link:hover {
-    background-color: #eaeaea;
-}
-
+/* Comment actions: edit, delete, pin icons */
 .comment-actions {
     display: flex;
     gap: 6px;
     align-items: center;
 }
 
-/* Small round icon buttons for Edit / Delete */
+/* Small round icon buttons for Edit / Delete / Pin */
 .comment-icon-button {
     width: 24px;
     height: 24px;
@@ -1005,4 +985,81 @@ body {
 
 .comment-icon-danger:hover {
     background-color: #f9e2e1;
+}
+
+/* Pin button and pinned state */
+.comment-pin-button {
+    margin-right: 2px;
+}
+
+.comment-pin-active {
+    background-color: #fff6d8;
+    border-color: #f0d38a;
+    color: #b58900;
+}
+
+.comment-pin-active:hover {
+    background-color: #ffefb3;
+}
+
+/* Pinned comment visual highlight */
+.comment-item-pinned {
+    border-color: #f0d38a;
+    background-color: #fffdf4;
+}
+
+.comment-pinned-badge {
+    margin-left: 8px;
+    padding: 2px 6px;
+    border-radius: 8px;
+    font-size: 11px;
+    color: #b58900;
+    background-color: #fff6d8;
+    border: 1px solid #f0d38a;
+}
+
+/* Edit-comment page actions */
+.comments-edit-actions {
+    margin-top: 8px;
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+}
+
+.comments-cancel-link {
+    font-size: 14px;
+    color: #555555;
+    text-decoration: none;
+    padding: 6px 12px;
+    border-radius: 6px;
+    border: 1px solid #e0e0e0;
+    background-color: #f5f5f5;
+}
+
+.comments-cancel-link:hover {
+    background-color: #eaeaea;
+}
+
+/* Messages (for pin-limit error, etc.) */
+.comments-messages {
+    margin-bottom: 8px;
+}
+
+.comments-message {
+    font-size: 13px;
+    padding: 6px 10px;
+    border-radius: 4px;
+    margin-bottom: 4px;
+}
+
+.comments-message-error {
+    background-color: #f9e2e1;
+    color: #a94442;
+    border: 1px solid #f0b8b6;
+}
+
+.comments-message-success {
+    background-color: #e6f4ea;
+    color: #2f7a3e;
+    border: 1px solid #c2e0c9;
 }

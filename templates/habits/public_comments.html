@@ -7,6 +7,16 @@
             <h2>General Comments</h2>
         </div>
 
+        {% if messages %}
+            <div class="comments-messages">
+                {% for message in messages %}
+                    <div class="comments-message comments-message-{{ message.tags }}">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+
         <form method="post" class="comments-form">
             {% csrf_token %}
             {{ form.non_field_errors }}
@@ -23,7 +33,7 @@
 
         <div class="comments-list">
             {% for comment in comments %}
-                <div class="comment-item">
+                <div class="comment-item {% if comment.is_pinned %}comment-item-pinned{% endif %}">
                     <div class="comment-header">
                         <div>
                             <span class="comment-author">
@@ -38,29 +48,54 @@
                             <span class="comment-date">
                                 {{ comment.created_at|date:"M j, Y H:i" }}
                             </span>
+                            {% if comment.is_pinned %}
+                                <span class="comment-pinned-badge">Pinned</span>
+                            {% endif %}
                         </div>
 
-                        {% if comment.user_id == request.user.id %}
-                            <div class="comment-actions">
-                                <!-- Edit icon button -->
+                        <div class="comment-actions">
+                            <!-- Pin / Unpin -->
+                            <form method="post" action="{% url 'pin_public_comment' comment.id %}">
+                                {% csrf_token %}
+                                {% if comment.is_pinned %}
+                                    <input type="hidden" name="action" value="unpin">
+                                    <button
+                                        type="submit"
+                                        class="comment-icon-button comment-pin-button comment-pin-active"
+                                        title="Unpin"
+                                    >
+                                        📌
+                                    </button>
+                                {% else %}
+                                    <input type="hidden" name="action" value="pin">
+                                    <button
+                                        type="submit"
+                                        class="comment-icon-button comment-pin-button"
+                                        title="Pin"
+                                    >
+                                        📌
+                                    </button>
+                                {% endif %}
+                            </form>
+
+                            <!-- Edit / Delete only for author -->
+                            {% if comment.user_id == request.user.id %}
                                 <a
                                     href="{% url 'edit_public_comment' comment.id %}"
                                     class="comment-icon-button"
                                     title="Edit"
                                 >
-                                    &#9998;  {# pencil icon #}
+                                    &#9998;
                                 </a>
-
-                                <!-- Delete icon button -->
                                 <a
                                     href="{% url 'delete_public_comment' comment.id %}"
                                     class="comment-icon-button comment-icon-danger"
                                     title="Delete"
                                 >
-                                    &#128465;  {# trash icon #}
+                                    &#128465;
                                 </a>
-                            </div>
-                        {% endif %}
+                            {% endif %}
+                        </div>
                     </div>
 
                     <div class="comment-text">

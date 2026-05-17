@@ -77,6 +77,7 @@ class CalendarDay(models.Model):
 class PublicComment(models.Model):
     """
     A public comment visible to all users.
+    Some comments can be 'pinned' (max 5 total).
     """
     user = models.ForeignKey(
         User,
@@ -84,10 +85,13 @@ class PublicComment(models.Model):
         related_name='public_comments',
     )
     text = models.TextField()
+    is_pinned = models.BooleanField(default=False)
+    pinned_at = models.DateTimeField(blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
-        ordering = ['-created_at']
+        # Pinned first, newest pin first, then newest comments
+        ordering = ['-is_pinned', '-pinned_at', '-created_at']
 
     def __str__(self):
         return f'Comment by {self.user.username} at {self.created_at}'
