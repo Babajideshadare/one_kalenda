@@ -1,7 +1,7 @@
 from django import forms
 from django.contrib.auth.models import User
 
-from .models import UserProfile
+from .models import UserProfile, PublicComment
 
 
 class RegisterForm(forms.Form):
@@ -117,3 +117,19 @@ class EditProfileForm(forms.Form):
             profile.save()
 
         return self.user
+
+
+class PublicCommentForm(forms.ModelForm):
+    """
+    Form for posting a public comment.
+    """
+    class Meta:
+        model = PublicComment
+        fields = ['text']
+        widgets = {
+            'text': forms.Textarea(attrs={
+                'rows': 3,
+                'class': 'comments-textarea',
+                'placeholder': 'Write a comment…',
+            }),
+        }

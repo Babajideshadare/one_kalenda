@@ -7,8 +7,8 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect, get_object_or_404
 from django.utils import timezone
 
-from .models import CalendarEntry, CalendarDay, UserProfile
-from .forms import RegisterForm, EditProfileForm
+from .models import CalendarEntry, CalendarDay, UserProfile, PublicComment
+from .forms import RegisterForm, EditProfileForm, PublicCommentForm
 
 
 @login_required
@@ -230,6 +230,36 @@ def delete_calendar_entry(request, pk):
 
     # GET: show confirmation page (Yes / No)
     return render(request, 'habits/delete_entry.html', {'entry': entry})
+
+
+@login_required
+def public_comments(request):
+    """
+    Shared public comments page visible to all logged-in users.
+    """
+    # Sidebar + tabs context
+    entries = CalendarEntry.objects.filter(user=request.user).order_by('order', 'id')
+    active_entry = entries.first() if entries else None
+
+    if request.method == 'POST':
+        form = PublicCommentForm(request.POST)
+        if form.is_valid():
+            comment = form.save(commit=False)
+            comment.user = request.user
+            comment.save()
+            return redirect('public_comments')
+    else:
+        form = PublicCommentForm()
+
+    comments = PublicComment.objects.select_related('user').all()[:100]
+
+    context = {
+        'entries': entries,
+        'active_entry': active_entry,
+        'form': form,
+        'comments': comments,
+    }
+    return render(request, 'habits/public_comments.html', context)
 
 
 def register(request):

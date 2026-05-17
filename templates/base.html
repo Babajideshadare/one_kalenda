@@ -89,7 +89,7 @@
                 {% for entry in entries %}
                     <a
                         href="/?entry_id={{ entry.id }}"
-                        class="tab-item {% if entry == active_entry %}active{% endif %}"
+                        class="tab-item {% if entry == active_entry and request.resolver_match.url_name != 'public_comments' %}active{% endif %}"
                         data-entry-id="{{ entry.id }}"
                     >
                         {{ entry.name }}
@@ -97,6 +97,15 @@
                 {% empty %}
                     <!-- no tabs when there are no entries -->
                 {% endfor %}
+
+                <!-- General Comments tab -->
+                <a
+                    href="{% url 'public_comments' %}"
+                    class="tab-item {% if request.resolver_match.url_name == 'public_comments' %}active{% endif %}"
+                >
+                    Comments
+                </a>
+
                 <a href="{% url 'create_calendar_entry' %}" class="tab-item tab-add">+</a>
             </div>
 

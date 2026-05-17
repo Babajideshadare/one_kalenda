@@ -72,3 +72,22 @@ class CalendarDay(models.Model):
 
     def __str__(self):
         return f'{self.entry.name} on {self.date} ({self.status})'
+
+
+class PublicComment(models.Model):
+    """
+    A public comment visible to all users.
+    """
+    user = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        related_name='public_comments',
+    )
+    text = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['-created_at']
+
+    def __str__(self):
+        return f'Comment by {self.user.username} at {self.created_at}'

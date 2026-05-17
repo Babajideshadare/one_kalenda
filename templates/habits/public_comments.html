@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="profile-container">
+    <div class="profile-card">
+        <div class="comments-header-row">
+            <h2>General Comments</h2>
+        </div>
+
+        <form method="post" class="comments-form">
+            {% csrf_token %}
+            {{ form.non_field_errors }}
+
+            <div class="comments-field">
+                {{ form.text }}
+                {% if form.text.errors %}
+                    <div class="field-error">{{ form.text.errors.0 }}</div>
+                {% endif %}
+            </div>
+
+            <button type="submit" class="comments-submit-btn">Post</button>
+        </form>
+
+        <div class="comments-list">
+            {% for comment in comments %}
+                <div class="comment-item">
+                    <div class="comment-header">
+                        <span class="comment-author">
+                            {% if comment.user.last_name %}
+                                {{ comment.user.last_name }}
+                            {% elif comment.user.first_name %}
+                                {{ comment.user.first_name }}
+                            {% else %}
+                                {{ comment.user.username }}
+                            {% endif %}
+                        </span>
+                        <span class="comment-date">
+                            {{ comment.created_at|date:"M j, Y H:i" }}
+                        </span>
+                    </div>
+                    <div class="comment-text">
+                        {{ comment.text|linebreaksbr }}
+                    </div>
+                </div>
+            {% empty %}
+                <p class="comments-empty">
+                    No comments yet. Be the first to post.
+                </p>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock %}
